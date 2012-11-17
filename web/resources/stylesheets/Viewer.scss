@@ -1,0 +1,69 @@
+@import "common";
+@import "menu";
+@import "tabs";
+
+body
+{
+  background-color: $background_color;
+  text-color: $text_color;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 0px auto;
+}
+
+#page
+{
+  margin:
+  {
+    left:  $margin_value;
+    right: $margin_value;
+    top:   $margin_value;
+  }
+}
+
+#page_left
+{
+  @include left_fixed($canvas_width);
+
+  height: $canvas_height;
+}
+
+#page_right
+{
+  @include right_liquid_wrapper
+}
+
+#ui
+{
+  @include right_liquid($canvas_width + $margin_value);
+}
+
+#canvas_wrap
+{
+  float: right;
+  margin-top: $canvas_wrap_top;
+}
+
+#layer0
+{
+  z-index:0;
+}
+
+#layer1
+{
+  position: absolute;
+  top:      $canvas_top_absolute + $margin_value;
+  left:     $margin_value * 2;
+  z-index:  1;
+}
+
+#frame_counter
+{
+  background-color: $background_color;
+  border:solid 2px #070707;
+  border-radius:4px;
+  width:100px;
+  height:50px;
+}

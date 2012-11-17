@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Viewer</title>
+    <link rel="stylesheet" href="Viewer.css">
+  </head>
+  <body>
+    <div id='menu_bar'>
+      <div id='menu_item_wrapper'>
+        <div id='new_button' class='menu_item'></div>
+        <div id='save_button' class='menu_item'></div>
+      </div>
+      <div id='status'></div>
+    </div>
+    <div id='page'>
+      <div id='page_right'>
+        <div id='ui'>
+          <div>
+            <div id='model_tab' class='tab selected'>Model</div>
+            <div id='texture_tab' class='tab'>Textures</div>
+          </div>
+          <div id='ui_contents'>
+            <div id='texture_area'>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='page_left'>
+        <div id='canvas_wrap'>
+          <div id='layer0'>
+            <canvas id='webgl_host' width='800' height='600'></canvas>
+          </div>
+          <div id='layer1'>
+            <canvas id='frame_counter'></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="application/dart" src="web/Viewer.dart"></script>
+    <script src="https://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+  </body>
+</html>

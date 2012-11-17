@@ -1,0 +1,6 @@
+name: DartWebGLCodelabLesson2
+description: WebGL
+version: 1.0.0
+dependencies:
+  spectre:
+    git: https://github.com/donny-dont/spectre.git

@@ -1,0 +1,66 @@
+/* menu.scss */
+@import "common";
+
+#menu_bar
+{
+  width:  100%;
+  height: $menu_image_size + ($menu_bar_padding * 2);
+  background-color: #f2f2f2;
+}
+
+#menu_item_wrapper
+{
+  float: left;
+
+  margin:
+  {
+    top:   ($menu_bar_height - $menu_image_size) / 2;
+    left:   $margin_value;
+  }
+}
+
+.menu_item
+{
+  width:    $menu_image_size;
+  height:   $menu_image_size;
+  display:  inline-block;
+  overflow: hidden;
+  cursor:   pointer;
+
+  margin:
+  {
+    right: $menu_bar_padding;
+  }
+}
+
+#new_button  { @include no_repeat; background: url(web/resources/images/new.png); }
+#save_button { @include no_repeat; background: url(web/resources/images/save.png); }
+
+#status
+{
+  float:      right;
+  width:      $menu_image_size;
+  height:     $menu_image_size;
+  background: url(web/resources/images/status.png) no-repeat;
+
+  margin:
+  {
+    top:   ($menu_bar_height - $menu_image_size) / 2;
+    right:  $margin_value;
+  }
+
+  .disconnected
+  {
+    background-position-x: $menu_image_size * 0;
+  }
+
+  .connecting
+  {
+    background-position-x: $menu_image_size * -1;
+  }
+
+  .connected
+  {
+    background-position-x: $menu_image_size * -2;
+  }
+}

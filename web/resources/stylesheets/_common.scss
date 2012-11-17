@@ -1,0 +1,85 @@
+/* common.css */
+
+$text_color: black;
+$background_color: #f8f8f8;
+$margin_value: 10px;
+
+$canvas_width:  800px;
+$canvas_height: 600px;
+
+$menu_bar_height: 32px;
+$menu_bar_color: #f4f4f4;
+$menu_image_size: 24px;
+$menu_bar_padding: 4px;
+
+$drop_area_border_color: #0f0f0f;
+$drop_area_over_border_color: #ff0000;
+
+$tab_border_color: #abadb3;
+$tab_background_color: #fff;
+$tab_height: 16px;
+$tab_padding: 5px;
+$tab_border_width: 1px;
+$tab_border_radius: 5px;
+
+$texture_size: 128px;
+$texture_width: $texture_size;
+$texture_height: $texture_size;
+$texture_drop_border_width: 3px;
+
+/* Border isn't present on the bottom */
+$canvas_wrap_top: $tab_height + $tab_border_width + 2 * $tab_padding;
+$canvas_top_absolute: $menu_bar_height + $margin_value + $canvas_wrap_top;
+
+@mixin no_repeat
+{
+  background-repeat: no-repeat;
+}
+
+@mixin left_fixed($width)
+{
+  float:     left;
+  width:     $width;
+  min-width: $width;
+  margin:
+  {
+    left: -100%;
+  }
+}
+
+@mixin right_liquid_wrapper
+{
+  float: left;
+  width: 100%;
+}
+
+@mixin right_liquid($dist)
+{
+  margin:
+  {
+    left: $dist;
+  }
+}
+
+@mixin bottom_border($color, $width)
+{
+  border:
+  {
+    style: solid;
+    color: $color;
+
+    left:   { width: 0px; }
+    right:  { width: 0px; }
+    top:    { width: 0px; }
+    bottom: { width: $width; }
+  }
+}
+
+@mixin drop_area($width)
+{
+  border:
+  {
+    style: dashed;
+    width: $width;
+  }
+}

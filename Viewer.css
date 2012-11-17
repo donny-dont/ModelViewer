@@ -1,0 +1,199 @@
+/* common.css */
+/* Border isn't present on the bottom */
+/* menu.scss */
+/* common.css */
+/* Border isn't present on the bottom */
+#menu_bar {
+  width: 100%;
+  height: 32px;
+  background-color: #f2f2f2; }
+
+#menu_item_wrapper {
+  float: left;
+  margin-top: 4px;
+  margin-left: 10px; }
+
+.menu_item {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+  margin-right: 4px; }
+
+#new_button {
+  background-repeat: no-repeat;
+  background: url(web/resources/images/new.png); }
+
+#save_button {
+  background-repeat: no-repeat;
+  background: url(web/resources/images/save.png); }
+
+#status {
+  float: right;
+  width: 24px;
+  height: 24px;
+  background: url(web/resources/images/status.png) no-repeat;
+  margin-top: 4px;
+  margin-right: 10px; }
+  #status .disconnected {
+    background-position-x: 0px; }
+  #status .connecting {
+    background-position-x: -24px; }
+  #status .connected {
+    background-position-x: -48px; }
+
+/** tabs.scss */
+/* common.css */
+/* Border isn't present on the bottom */
+.tab {
+  display: inline-block;
+  padding: 5px;
+  cursor: pointer;
+  border-style: solid;
+  border-color: #abadb3;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-width: 1px;
+  border-bottom-width: 0px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px; }
+
+.selected {
+  background: white; }
+
+#ui_contents {
+  height: 598px;
+  background: white;
+  overflow: scroll;
+  border-style: solid;
+  border-color: #abadb3;
+  border-width: 1px; }
+  #ui_contents h2 {
+    text-color: black;
+    font-weight: normal;
+    border-style: solid;
+    border-color: black;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 1px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 5px; }
+
+textarea {
+  font-family: "Lucida Console", Monaco, monospace;
+  width: 534px;
+  height: 594px;
+  overflow: scroll;
+  white-space: nowrap;
+  spellcheck: false;
+  font-size: 12px; }
+
+.drag_over {
+  border-color: red; }
+
+.drag_none {
+  border-color: #0f0f0f; }
+
+.first {
+  background-color: white;
+  border-style: solid;
+  border-color: #abadb3;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 1px; }
+
+.second {
+  background-color: #f8f8f8;
+  border-style: solid;
+  border-color: #abadb3;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 1px; }
+
+/* Texture UI */
+.texture_unit {
+  padding: 5px; }
+
+.texture_element {
+  display: inline-block; }
+
+.texture_drop {
+  display: inline-block;
+  width: 128px;
+  height: 128px;
+  border-style: dashed;
+  border-width: 3px;
+  margin-left: 0px;
+  margin-right: 5px;
+  margin-top: 0px;
+  margin-bottom: 0px; }
+  .texture_drop img {
+    border-style: none;
+    width: 128px;
+    height: 128px;
+    max-width: 128px;
+    max-height: 128px; }
+
+.sampler_state {
+  display: inline-block;
+  vertical-align: top; }
+
+body {
+  background-color: #f8f8f8;
+  text-color: black;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 0px auto; }
+
+#page {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px; }
+
+#page_left {
+  float: left;
+  width: 800px;
+  min-width: 800px;
+  margin-left: -100%;
+  height: 600px; }
+
+#page_right {
+  float: left;
+  width: 100%; }
+
+#ui {
+  margin-left: 810px; }
+
+#canvas_wrap {
+  float: right;
+  margin-top: 27px; }
+
+#layer0 {
+  z-index: 0; }
+
+#layer1 {
+  position: absolute;
+  top: 79px;
+  left: 20px;
+  z-index: 1; }
+
+#frame_counter {
+  background-color: #f8f8f8;
+  border: solid 2px #070707;
+  border-radius: 4px;
+  width: 100px;
+  height: 50px; }
