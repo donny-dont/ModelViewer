@@ -5,6 +5,8 @@ part of viewer;
  */
 class TextureSelection
 {
+  static const String _dropText = 'Drag and Drop a Texture to Change';
+
   /// The [DivElement] containing the Texture
   DivElement _parent;
 
@@ -59,20 +61,30 @@ class TextureSelection
       textureDropArea.classes.add('texture_drop');
       textureDropArea.classes.add('drag_none');
 
+      ParagraphElement dropText = new ParagraphElement();
+      dropText.innerHTML = _dropText;
+      dropText.classes.add('hidden');
+      textureDropArea.nodes.add(dropText);
+
       ImageElement textureDisplay = new ImageElement();
       textureDropArea.nodes.add(textureDisplay);
 
       textureArea.nodes.add(textureDropArea);
 
-      textureDisplay.on.dragEnter.add((_) {
-        print('enter $index');
+      textureArea.on.dragEnter.add((_) {
         textureDropArea.classes.remove('drag_none');
         textureDropArea.classes.add('drag_over');
       });
-      textureDisplay.on.dragLeave.add((_) {
-        print('exit $index');
+      textureArea.on.dragLeave.add((_) {
         textureDropArea.classes.remove('drag_over');
         textureDropArea.classes.add('drag_none');
+      });
+
+      textureArea.on.mouseOver.add((_) {
+        dropText.classes.remove('hidden');
+      });
+      textureArea.on.mouseOut.add((_) {
+        dropText.classes.add('hidden');
       });
     }
 

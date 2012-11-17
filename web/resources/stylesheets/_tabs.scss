@@ -35,7 +35,8 @@
   height:     $canvas_height - 2 * ($tab_border_width);
   background: $tab_background_color;
 
-  overflow:scroll;
+  position: relative;
+  overflow: auto;
 
   border:
   {
@@ -99,11 +100,21 @@ textarea {
   @include bottom_border($tab_border_color, $tab_border_width);
 }
 
+/* Model UI */
+
+.model_drop
+{
+  margin: 0px auto;
+  width:  $model_width;
+  height: $model_height;
+}
+
 /* Texture UI */
 
 .texture_unit
 {
   padding: $tab_padding;
+  min-width: 200px;
 }
 
 .texture_element
@@ -127,9 +138,24 @@ textarea {
     bottom: 0px;
   }
 
+  p
+  {
+    @include text_hover;
+
+    width:  $texture_width;
+    margin:
+    {
+      left:   0px;
+      right:  0px;
+      top:    ($texture_height - 32px) / 2;
+      bottom: 0px;
+    }
+  }
+
   img
   {
     border-style: none;
+    pointer-events: none;
 
     width:      $texture_width;
     height:     $texture_width;

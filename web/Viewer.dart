@@ -14,11 +14,22 @@ part 'client/json_object.dart';
 part 'client/server_connection.dart';
 part 'client/messages.dart';
 
+part 'ui/element_names.dart';
+part 'ui/tabbed_element.dart';
 part 'ui/texture_selection.dart';
 
 TextureSelection _textureSelection;
 
+void _setupUITab()
+{
+  TabbedElement element = new TabbedElement();
+  element.addTab(_ElementNames.modelTabName, _ElementNames.modelAreaName);
+  element.addTab(_ElementNames.textureTabName, _ElementNames.textureAreaName);
+}
+
 void main()
 {
+  _setupUITab();
+
   _textureSelection = new TextureSelection();
 }

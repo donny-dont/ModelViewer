@@ -27,6 +27,8 @@ $texture_width: $texture_size;
 $texture_height: $texture_size;
 $texture_drop_border_width: 3px;
 
+$ui_element_min_width: 300px;
+
 /* Border isn't present on the bottom */
 $canvas_wrap_top: $tab_height + $tab_border_width + 2 * $tab_padding;
 $canvas_top_absolute: $menu_bar_height + $margin_value + $canvas_wrap_top;
@@ -82,4 +84,17 @@ $canvas_top_absolute: $menu_bar_height + $margin_value + $canvas_wrap_top;
     style: dashed;
     width: $width;
   }
+}
+
+@mixin text_hover
+{
+    text-align: center;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+}
+
+.hidden
+{
+  display: none;
 }
