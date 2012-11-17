@@ -55,8 +55,8 @@
     {
       left:   0px;
       right:  0px;
-      top:    2px;
-      bottom: 2px;
+      top:    0px;
+      bottom: $ui_row_padding;
     }
     padding:
     {
@@ -100,22 +100,38 @@ textarea {
   @include bottom_border($tab_border_color, $tab_border_width);
 }
 
+.ui_row
+{
+  padding: $ui_row_padding;
+  min-width: 200px;
+}
+
 /* Model UI */
 
-.model_drop
+#model_drop
 {
   margin: 0px auto;
   width:  $model_width;
   height: $model_height;
+
+  @include drop_area($texture_drop_border_width);
+
+  p
+  {
+    @include text_hover;
+
+    width:  $model_width;
+    margin:
+    {
+      left:   0px;
+      right:  0px;
+      top:    ($model_height - 32px) / 2;
+      bottom: 0px;
+    }
+  }
 }
 
 /* Texture UI */
-
-.texture_unit
-{
-  padding: $tab_padding;
-  min-width: 200px;
-}
 
 .texture_element
 {

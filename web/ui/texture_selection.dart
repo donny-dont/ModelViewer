@@ -5,6 +5,7 @@ part of viewer;
  */
 class TextureSelection
 {
+  /// Text to display when hovering over the drop area.
   static const String _dropText = 'Drag and Drop a Texture to Change';
 
   /// The [DivElement] containing the Texture
@@ -36,7 +37,7 @@ class TextureSelection
   {
     // Setup the UI area
     DivElement elementArea = new DivElement();
-    elementArea.classes.add('texture_unit');
+    elementArea.classes.add('ui_row');
     elementArea.classes.add((index % 2 == 0) ? 'first' : 'second');
 
     _parent.nodes.add(elementArea);

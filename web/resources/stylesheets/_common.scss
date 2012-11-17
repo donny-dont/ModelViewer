@@ -12,6 +12,9 @@ $menu_bar_color: #f4f4f4;
 $menu_image_size: 24px;
 $menu_bar_padding: 4px;
 
+$ui_row_min_width: 400px;
+$ui_row_padding:   8px;
+
 $drop_area_border_color: #0f0f0f;
 $drop_area_over_border_color: #ff0000;
 
@@ -21,6 +24,9 @@ $tab_height: 16px;
 $tab_padding: 5px;
 $tab_border_width: 1px;
 $tab_border_radius: 5px;
+
+$model_width: 256px;
+$model_height: 256px;
 
 $texture_size: 128px;
 $texture_width: $texture_size;
