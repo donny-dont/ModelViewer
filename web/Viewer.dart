@@ -108,10 +108,11 @@ class Viewer
    */
   void saveFile()
   {
-    String value = JSON.stringify(serialize());
+    Map values = serialize();
+    String json = JSON.stringify(values);
 
     print('Application State\n');
-    print(value);
+    print(json);
   }
 
   /**
@@ -129,6 +130,13 @@ class Viewer
   {
     Map data = new Map();
 
+    // Append the texture data to the map
+    Map textureData = _textureSelection.toJson();
+
+    textureData.forEach((key, value) {
+      data[key] = value;
+    });
+
     // Append the renderer state to the map
     Map rendererData = _rendererSelection.toJson();
 
@@ -145,6 +153,7 @@ class Viewer
   void deserialize(Map data)
   {
     _rendererSelection.fromJson(data);
+    _textureSelection.fromJson(data);
   }
 }
 

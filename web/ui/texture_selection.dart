@@ -223,7 +223,7 @@ class TextureUnit
    */
   void fromJson(Map json)
   {
-    _textureDisplay.src = json[_textureFileName] = _textureDisplay.src;
+    _textureDisplay.src = json[_textureFileName];
     _wrapS.value = json[_wrapSName];
     _wrapT.value = json[_wrapTName];
     _minFilter.value = json[_minificationFilterName];
@@ -250,6 +250,12 @@ class TextureUnit
  */
 class TextureSelection
 {
+  //---------------------------------------------------------------------
+  // Class variables
+  //---------------------------------------------------------------------
+
+  /// Serialization name for the file.
+  static const String _texturesName = 'textures';
   /**
    * The maximum number of textures WebGL supports
    *
@@ -257,8 +263,18 @@ class TextureSelection
    */
   static const int _maxTextureUnits = 16;
 
+  //---------------------------------------------------------------------
+  // Member variables
+  //---------------------------------------------------------------------
+
   /// The [DivElement] containing the Texture
   DivElement _parent;
+  /// The individual [TextureUnit]s.
+  List<TextureUnit> _textureUnits;
+
+  //---------------------------------------------------------------------
+  // Construction
+  //---------------------------------------------------------------------
 
   /**
    * Initializes an instance of the [TextureSelection] class.
@@ -268,11 +284,54 @@ class TextureSelection
     _parent = query('#texture_area');
     assert(_parent != null);
 
+    _textureUnits = new List<TextureUnit>();
+
     for (int i = 0; i < _maxTextureUnits; ++i)
     {
       TextureUnit textureUnit = new TextureUnit(i);
 
+      _textureUnits.add(textureUnit);
       _parent.nodes.add(textureUnit.element);
     }
   }
+
+  //---------------------------------------------------------------------
+  // Serialization
+  //---------------------------------------------------------------------
+
+  /**
+   * Saves the renderer information to a JSON.
+   */
+  Map toJson()
+  {
+    Map serialized = new Map();
+    List<Map> serializedTextureUnits = new List<Map>();
+
+    for (int i = 0; i < _maxTextureUnits; ++i)
+    {
+      serializedTextureUnits.add(_textureUnits[i].toJson());
+    }
+
+    serialized[_texturesName] = serializedTextureUnits;
+
+    return serialized;
+  }
+
+  /**
+   * Loads the renderer information from a JSON.
+   */
+  void fromJson(Map json)
+  {
+    List<Map> serializedTextureUnits = json[_texturesName];
+
+    for (int i = 0; i < _maxTextureUnits; ++i)
+    {
+      _textureUnits[i].fromJson(serializedTextureUnits[i]);
+    }
+  }
+
+  //---------------------------------------------------------------------
+  // Events
+  //---------------------------------------------------------------------
+
 }
