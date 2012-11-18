@@ -9,44 +9,306 @@
   <body>
     <div id='menu_bar'>
       <div id='menu_item_wrapper'>
-        <div id='new_button' class='menu_item'></div>
-        <div id='save_button' class='menu_item'></div>
+        <div id='new_file_button' class='menu_item'></div>
+        <div id='save_file_button' class='menu_item'></div>
       </div>
       <div id='status'></div>
     </div>
     <div id='page'>
       <div id='page_right'>
         <div id='ui'>
+          <!-- Tabs -->
           <div>
             <div id='model_tab' class='tab selected'>Model</div>
             <div id='texture_tab' class='tab'>Textures</div>
+            <div id='vertex_shader_tab' class='tab'>Vertex</div>
+            <div id='fragment_shader_tab' class='tab'>Fragment</div>
+            <div id='uniform_tab' class='tab'>Uniforms</div>
+            <div id='renderer_tab' class='tab'>Renderer</div>
           </div>
+          <!-- UI Content -->
           <div id='ui_contents'>
+
+            <!-- Model Area -->
             <div id='model_area'>
               <div class='ui_row first'>
                 <h2>Standard Models</h2>
+                <div class='centered'>
+                  <div id='cube_button' class='model_button'>
+                    <img src='web/resources/images/cube.png' alt='Cube' />
+                  </div>
+                  <div id='sphere_button' class='model_button'>
+                    <img src='web/resources/images/sphere.png' alt='Sphere' />
+                  </div>
+                  <div id='plane_button' class='model_button'>
+                    <img src='web/resources/images/plane.png' alt='Plane' />
+                  </div>
+                  <div id='cylinder_button' class='model_button'>
+                    <img src='web/resources/images/cylinder.png' alt='Cylinder' />
+                  </div>
+                </div>
               </div>
               <div class='ui_row second'>
                 <h2>Custom Model</h2>
-                <div id='model_drop'>
+                <div id='model_drop' class='centered'>
                 </div>
               </div>
               <div class='ui_row first'>
                 <h2>Transform</h2>
               </div>
             </div>
+
+            <!-- Texture Area -->
             <div id='texture_area' class='hidden'>
+            </div>
+
+            <!-- Vertex Shader Area -->
+            <div id='vertex_shader_area' class='hidden'>
+              <textarea id='vertex_shader_source'></textarea>
+            </div>
+
+            <!-- Fragment Shader Area -->
+            <div id='fragment_shader_area' class='hidden'>
+              <textarea id='fragment_shader_source'></textarea>
+            </div>
+
+            <!-- Uniform Area -->
+            <div id='uniform_area' class='hidden'>
+              <div class='ui_row first'>
+                <h2>Builtin Uniforms</h2>
+              </div>
+            </div>
+
+            <!-- Renderer Area -->
+            <div id='renderer_area' class='hidden'>
+
+              <!-- Rasterizer State -->
+              <div class='ui_row first'>
+                <h2>Rasterizer State</h2>
+                <table>
+                  <tr>
+                    <td class='state_value_name'>Enabled</td>
+                    <td><input type="checkbox" id='rasterizer_state_enabled' checked='checked' /></td>
+                  </tr>
+                  <tr>
+                    <td>Cull Mode</td>
+                    <td>
+                      <select id='rasterizer_cull_mode'>
+                        <option value='CullFront'>Front</option>
+                        <option value='CullBack' selected='selected' >Back</option>
+                        <option value='CullFrontAndBack'>Front and back</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Front Face</td>
+                    <td>
+                      <select id='rasterizer_front_face'>
+                        <option value='FrontCW'>Clockwise</option>
+                        <option value='FrontCCW' selected='selected' >Counter clockwise</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Depth State -->
+              <div class='ui_row second'>
+                <h2>Depth State</h2>
+                <table>
+                  <tr>
+                    <td class='state_value_name'>Test Enabled</td>
+                    <td><input type="checkbox" id='depth_state_enabled' checked='checked' /></td>
+                  </tr>
+                  <tr>
+                    <td>Write Enabled</td>
+                    <td><input type="checkbox" id='depth_write_enabled' /></td>
+                  </tr>
+                  <tr>
+                    <td>Comparison</td>
+                    <td>
+                      <select id='depth_comparison'>
+                        <option value='DepthComparisonOpNever'>Never</option>
+                        <option value='DepthComparisonOpAlways'>Always</option>
+                        <option value='DepthComparisonOpEqual'>Equal</option>
+                        <option value='DepthComparisonOpNotEqual'>Not equal</option>
+                        <option value='DepthComparisonOpLess' selected='selected' >Less than</option>
+                        <option value='DepthComparisonOpLessEqual'>Less than or equal</option>
+                        <option value='DepthComparisonOpGreaterEqual'>Greater than or equal</option>
+                        <option value='DepthComparisonOpGreater'>Greater than</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Blend State -->
+              <div class='ui_row first'>
+                <h2>Blend State</h2>
+                <table>
+                  <tr>
+                    <td class='state_value_name'>Enabled</td>
+                    <td><input type="checkbox" id='blend_state_enabled' checked='checked' /></td>
+                  </tr>
+                  <tr>
+                    <td>Write red</td>
+                    <td><input type="checkbox" id='write_red_enabled' checked='checked' /></td>
+                  </tr>
+                  <tr>
+                    <td>Write green</td>
+                    <td><input type="checkbox" id='write_green_enabled' checked='checked' /></td>
+                  </tr>
+                  <tr>
+                    <td>Write blue</td>
+                    <td><input type="checkbox" id='write_blue_enabled' checked='checked' /></td>
+                  </tr>
+                  <tr>
+                    <td>Write alpha</td>
+                    <td><input type="checkbox" id='write_alpha_enabled' checked='checked' /></td>
+                  </tr>
+                  <tr>
+                    <td>Source color function</td>
+                    <td>
+                      <select id='source_color_function'>
+                        <option value='BlendSourceZero'>Zero</option>
+                        <option value='BlendSourceOne'>One</option>
+                        <option value='BlendSourceShaderColor'>Shader color</option>
+                        <option value='BlendSourceShaderInverseColor'>Shader inverse color</option>
+                        <option value='BlendSourceShaderAlpha' selected='selected' >Shader Alpha</option>
+                        <option value='BlendSourceShaderInverseAlpha'>Shader inverse alpha</option>
+                        <option value='BlendSourceTargetColor'>Target color</option>
+                        <option value='BlendSourceTargetInverseColor'>Target inverse color</option>
+                        <option value='BlendSourceTargetAlpha'>Target Alpha</option>
+                        <option value='BlendSourceTargetInverseAlpha'>Target inverse alpha</option>
+                        <option value='BlendSourceBlendColor'>Blend color</option>
+                        <option value='BlendSourceBlendAlpha'>Blend alpha</option>
+                        <option value='BlendSourceBlendInverseColor'>Blend inverse Color</option>
+                        <option value='BlendSourceBlendInverseAlpha'>Blend nverse Alpha</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Destination color function</td>
+                    <td>
+                      <select id='destination_color_function'>
+                        <option value='BlendSourceZero'>Zero</option>
+                        <option value='BlendSourceOne'>One</option>
+                        <option value='BlendSourceShaderColor'>Shader color</option>
+                        <option value='BlendSourceShaderInverseColor'>Shader inverse color</option>
+                        <option value='BlendSourceShaderAlpha'>Shader Alpha</option>
+                        <option value='BlendSourceShaderInverseAlpha' selected='selected' >Shader inverse alpha</option>
+                        <option value='BlendSourceTargetColor'>Target color</option>
+                        <option value='BlendSourceTargetInverseColor'>Target inverse color</option>
+                        <option value='BlendSourceTargetAlpha'>Target Alpha</option>
+                        <option value='BlendSourceTargetInverseAlpha'>Target inverse alpha</option>
+                        <option value='BlendSourceBlendColor'>Blend color</option>
+                        <option value='BlendSourceBlendAlpha'>Blend alpha</option>
+                        <option value='BlendSourceBlendInverseColor'>Blend inverse Color</option>
+                        <option value='BlendSourceBlendInverseAlpha'>Blend nverse Alpha</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Source alpha function</td>
+                    <td>
+                      <select id='source_alpha_function'>
+                        <option value='BlendSourceZero'>Zero</option>
+                        <option value='BlendSourceOne'>One</option>
+                        <option value='BlendSourceShaderColor'>Shader color</option>
+                        <option value='BlendSourceShaderInverseColor'>Shader inverse color</option>
+                        <option value='BlendSourceShaderAlpha' selected='selected' >Shader Alpha</option>
+                        <option value='BlendSourceShaderInverseAlpha'>Shader inverse alpha</option>
+                        <option value='BlendSourceTargetColor'>Target color</option>
+                        <option value='BlendSourceTargetInverseColor'>Target inverse color</option>
+                        <option value='BlendSourceTargetAlpha'>Target Alpha</option>
+                        <option value='BlendSourceTargetInverseAlpha'>Target inverse alpha</option>
+                        <option value='BlendSourceBlendColor'>Blend color</option>
+                        <option value='BlendSourceBlendAlpha'>Blend alpha</option>
+                        <option value='BlendSourceBlendInverseColor'>Blend inverse Color</option>
+                        <option value='BlendSourceBlendInverseAlpha'>Blend nverse Alpha</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Destination alpha function</td>
+                    <td>
+                      <select id='destination_alpha_function'>
+                        <option value='BlendSourceZero'>Zero</option>
+                        <option value='BlendSourceOne'>One</option>
+                        <option value='BlendSourceShaderColor'>Shader color</option>
+                        <option value='BlendSourceShaderInverseColor'>Shader inverse color</option>
+                        <option value='BlendSourceShaderAlpha'>Shader Alpha</option>
+                        <option value='BlendSourceShaderInverseAlpha' selected='selected' >Shader inverse alpha</option>
+                        <option value='BlendSourceTargetColor'>Target color</option>
+                        <option value='BlendSourceTargetInverseColor'>Target inverse color</option>
+                        <option value='BlendSourceTargetAlpha'>Target Alpha</option>
+                        <option value='BlendSourceTargetInverseAlpha'>Target inverse alpha</option>
+                        <option value='BlendSourceBlendColor'>Blend color</option>
+                        <option value='BlendSourceBlendAlpha'>Blend alpha</option>
+                        <option value='BlendSourceBlendInverseColor'>Blend inverse Color</option>
+                        <option value='BlendSourceBlendInverseAlpha'>Blend nverse Alpha</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Blend color operation</td>
+                    <td>
+                      <select id='blend_color_operation'>
+                        <option value='BlendOpAdd'>Add</option>
+                        <option value='BlendOpSubtract'>Subtract</option>
+                        <option value='BlendOpReverseSubtract'>Reverse subtract</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Alpha color operation</td>
+                    <td>
+                      <select id='blend_alpha_operation'>
+                        <option value='BlendOpAdd'>Add</option>
+                        <option value='BlendOpSubtract'>Subtract</option>
+                        <option value='BlendOpReverseSubtract'>Reverse subtract</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
+
       <div id='page_left'>
+        <!-- Canvas Wrapper -->
         <div id='canvas_wrap'>
           <div id='layer0'>
-            <canvas id='webgl_host' width='800' height='600'></canvas>
+            <canvas id='webgl_host' width='640' height='480'></canvas>
           </div>
           <div id='layer1'>
             <canvas id='frame_counter'></canvas>
+          </div>
+        </div>
+
+        <!-- Compilation Output -->
+        <div id='compilation_area'>
+          <div>
+            <div id='error_tab' class='tab selected'>Errors</div>
+            <div id='warning_tab' class='tab'>Warnings</div>
+          </div>
+          <div id='error_list' class='compiler_message'>
+            <table class='compiler_output'>
+              <tbody id='error_table'>
+              </tbody>
+            </table>
+          </div>
+          <div id='warning_list' class='compiler_message hidden'>
+            <table class='compiler_output'>
+              <tbody id='warning_table'>
+              </tbody>
+            </table>
+          </div>
+          <div id='compiler_status'>
+            0 errors 0 warnings
           </div>
         </div>
       </div>

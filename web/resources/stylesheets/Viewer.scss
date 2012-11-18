@@ -27,17 +27,23 @@ body
 {
   @include left_fixed($canvas_width);
 
-  height: $canvas_height;
+  /* todo remove */
+  overflow: hidden;
+  height: $application_height - ($menu_bar_height + 2 * $menu_bar_padding);
 }
+
+canvas { background-color: red; }
 
 #page_right
 {
-  @include right_liquid_wrapper
+  @include right_liquid_wrapper;
+
 }
 
 #ui
 {
   @include right_liquid($canvas_width + $margin_value);
+  min-width: 501px;
 }
 
 #canvas_wrap

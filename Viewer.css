@@ -1,11 +1,25 @@
 /* common.css */
+/*
+$canvas_width:  800px;
+$canvas_height: 600px;
+*/
 /* Border isn't present on the bottom */
+.centered {
+  margin: 0px auto; }
+
 .hidden {
   display: none; }
 
 /* menu.scss */
 /* common.css */
+/*
+$canvas_width:  800px;
+$canvas_height: 600px;
+*/
 /* Border isn't present on the bottom */
+.centered {
+  margin: 0px auto; }
+
 .hidden {
   display: none; }
 
@@ -27,11 +41,11 @@
   cursor: pointer;
   margin-right: 4px; }
 
-#new_button {
+#new_file_button {
   background-repeat: no-repeat;
   background: url(web/resources/images/new.png); }
 
-#save_button {
+#save_file_button {
   background-repeat: no-repeat;
   background: url(web/resources/images/save.png); }
 
@@ -51,7 +65,14 @@
 
 /** tabs.scss */
 /* common.css */
+/*
+$canvas_width:  800px;
+$canvas_height: 600px;
+*/
 /* Border isn't present on the bottom */
+.centered {
+  margin: 0px auto; }
+
 .hidden {
   display: none; }
 
@@ -74,7 +95,7 @@
   background: white; }
 
 #ui_contents {
-  height: 598px;
+  height: 699px;
   background: white;
   position: relative;
   overflow: auto;
@@ -98,6 +119,14 @@
     padding-right: 0px;
     padding-top: 0px;
     padding-bottom: 5px; }
+  #ui_contents textarea {
+    font-family: "Lucida Console", Monaco, monospace;
+    white-space: nowrap;
+    spellcheck: false;
+    font-size: 12px;
+    resize: both;
+    width: 100%;
+    box-sizing: border-box; }
 
 textarea {
   font-family: "Lucida Console", Monaco, monospace;
@@ -137,8 +166,14 @@ textarea {
   min-width: 200px; }
 
 /* Model UI */
+.model_button {
+  display: inline-block;
+  border: dashed 1px black;
+  padding: 2px 3px;
+  margin-left: 5px;
+  border-radius: 4px; }
+
 #model_drop {
-  margin: 0px auto;
   width: 256px;
   height: 256px;
   border-style: dashed;
@@ -189,6 +224,38 @@ textarea {
 .sampler_state {
   display: inline-block;
   vertical-align: top; }
+  .sampler_state select {
+    width: 180px; }
+
+/* Renderer UI */
+#renderer_area select {
+  width: 150px; }
+
+.state_value_name {
+  width: 166px; }
+
+/* Compiler Output UI */
+#compilation_area {
+  width: 638px; }
+
+.compiler_message {
+  background: white;
+  border: 1px solid #abadb3;
+  overflow-y: scroll;
+  height: 162px; }
+
+.compiler_output tr:nth-child(even) {
+  background: #f8f8f8; }
+
+#compiler_status {
+  border-style: solid;
+  border-color: #abadb3;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-width: 0px;
+  border-bottom-width: 1px;
+  background: #e2e2e2;
+  padding: 5px; }
 
 body {
   background-color: #f8f8f8;
@@ -206,17 +273,23 @@ body {
 
 #page_left {
   float: left;
-  width: 800px;
-  min-width: 800px;
+  width: 640px;
+  min-width: 640px;
   margin-left: -100%;
-  height: 600px; }
+  /* todo remove */
+  overflow: hidden;
+  height: 728px; }
+
+canvas {
+  background-color: red; }
 
 #page_right {
   float: left;
   width: 100%; }
 
 #ui {
-  margin-left: 810px; }
+  margin-left: 650px;
+  min-width: 501px; }
 
 #canvas_wrap {
   float: right;

@@ -32,7 +32,7 @@
 
 #ui_contents
 {
-  height:     $canvas_height - 2 * ($tab_border_width);
+  height:     $application_height - $canvas_top_absolute;
   background: $tab_background_color;
 
   position: relative;
@@ -66,6 +66,17 @@
       bottom: 5px;
     }
   }
+
+	textarea
+	{
+	  font-family:"Lucida Console", Monaco, monospace;
+	  white-space:nowrap;
+	  spellcheck:false;
+	  font-size:12px;
+	  resize: both;
+	  width: 100%;
+	  box-sizing: border-box;
+	}
 }
 
 textarea {
@@ -108,9 +119,17 @@ textarea {
 
 /* Model UI */
 
+.model_button
+{
+  display:inline-block;
+  border:dashed 1px black;
+  padding:2px 3px;
+  margin-left:5px;
+  border-radius:4px;
+}
+
 #model_drop
 {
-  margin: 0px auto;
   width:  $model_width;
   height: $model_height;
 
@@ -184,4 +203,62 @@ textarea {
 {
   display: inline-block;
   vertical-align: top;
+
+  select
+  {
+    width: 180px;
+  }
+}
+
+/* Renderer UI */
+
+#renderer_area
+{
+  select
+  {
+    width: 150px;
+  }
+}
+
+.state_value_name
+{
+  width: 166px;
+}
+
+/* Compiler Output UI */
+
+#compilation_area
+{
+  width: $canvas_width - 2 * ($tab_border_width);
+}
+
+.compiler_message
+{
+  background: $tab_background_color;
+  border:1px solid $tab_border_color;
+  overflow-y:scroll;
+  height: $compiler_message_height;
+}
+
+.compiler_output {
+  tr:nth-child(even)
+  {
+    background: $background_color;
+  }
+}
+
+#compiler_status {
+  border:
+  {
+    style: solid;
+    color: $tab_border_color;
+
+    left:   { width: $tab_border_width; }
+    right:  { width: $tab_border_width; }
+    top:    { width: 0px; }
+    bottom: { width: $tab_border_width; }
+  }
+
+  background: $compiler_status_background_color;
+  padding:5px;
 }

@@ -4,13 +4,20 @@ $text_color: black;
 $background_color: #f8f8f8;
 $margin_value: 10px;
 
+$application_height: 768px;
+
+$canvas_width:  640px;
+$canvas_height: 480px;
+/*
 $canvas_width:  800px;
 $canvas_height: 600px;
-
+*/
 $menu_bar_height: 32px;
 $menu_bar_color: #f4f4f4;
 $menu_image_size: 24px;
 $menu_bar_padding: 4px;
+
+$menu_bar_height: $menu_image_size + ($menu_bar_padding * 2);
 
 $ui_row_min_width: 400px;
 $ui_row_padding:   8px;
@@ -34,6 +41,10 @@ $texture_height: $texture_size;
 $texture_drop_border_width: 3px;
 
 $ui_element_min_width: 300px;
+
+$compilation_area_width: $canvas_width - 2 * ($tab_border_width);
+$compiler_message_height: 162px;
+$compiler_status_background_color: #e2e2e2;
 
 /* Border isn't present on the bottom */
 $canvas_wrap_top: $tab_height + $tab_border_width + 2 * $tab_padding;
@@ -98,6 +109,11 @@ $canvas_top_absolute: $menu_bar_height + $margin_value + $canvas_wrap_top;
     pointer-events: none;
     position: absolute;
     z-index: 1;
+}
+
+.centered
+{
+  margin: 0px auto;
 }
 
 .hidden
