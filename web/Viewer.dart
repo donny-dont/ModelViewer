@@ -2,6 +2,8 @@ library viewer;
 
 import 'dart:html';
 import 'dart:json';
+import 'dart:math' as Math;
+import 'dart:isolate';
 
 import 'package:spectre/spectre.dart';
 import 'package:vector_math/vector_math_browser.dart';
@@ -14,6 +16,9 @@ part 'client/json_object.dart';
 part 'client/server_connection.dart';
 part 'client/messages.dart';
 
+part 'application/frame_counter.dart';
+part 'application/game.dart';
+part 'application/shader_defaults.dart';
 part 'ui/element_names.dart';
 part 'ui/model_selection.dart';
 part 'ui/new_file.dart';
@@ -25,6 +30,8 @@ part 'workspace/workspace.dart';
 
 /// Instance of the [Viewer] class.
 Viewer _viewer;
+/// Instance of the [FrameCounter] class.
+FrameCounter _counter;
 
 class Viewer
 {
@@ -183,7 +190,28 @@ class Viewer
   }
 }
 
+/**
+ * Update function for the application.
+ *
+ * The current [time] is passed in.
+ */
+void _onUpdate(double time)
+{
+  _counter.update(time);
+  Game.onUpdate(time);
+
+  // For the animation to continue the function
+  // needs to set itself again
+  window.requestAnimationFrame(_onUpdate);
+}
+
 void main()
 {
   _viewer = new Viewer();
+
+  // Initialize the WebGL side
+  Game.onInitialize();
+  _counter = new FrameCounter('#frame_counter');
+
+  window.requestAnimationFrame(_onUpdate);
 }
