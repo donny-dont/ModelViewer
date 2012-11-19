@@ -2,5 +2,9 @@ name: DartWebGLCodelabLesson2
 description: WebGL
 version: 1.0.0
 dependencies:
+  logging: 
+    sdk: logging
   spectre:
     git: https://github.com/donny-dont/spectre.git
+  objectory:
+    git: https://github.com/vadimtsushko/objectory.git
