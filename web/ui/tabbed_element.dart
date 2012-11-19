@@ -1,17 +1,31 @@
 part of viewer;
 
+/**
+ * A container for a tabbed display.
+ */
 class TabbedElement
 {
   static const String _selectedTabClass = 'selected';
   static const String _hiddenClass = 'hidden';
 
+  /// The tabs associated with the container.
   List<Element> _tabs;
+  /// The contents associated with the container.
   List<Element> _tabContents;
 
+  /**
+   * Creates an instance of the [TabbedElement] class.
+   */
   TabbedElement()
     : _tabs = new List<Element>()
     , _tabContents = new List<Element>();
 
+  /**
+   * Adds a tab to the container.
+   *
+   * The [tabId] specifies the identifier of the tab,
+   * while the [tabContent] specifies the area to display.
+   */
   void addTab(String tabId, String tabContentId)
   {
     int index = _tabs.length;
@@ -31,6 +45,11 @@ class TabbedElement
     });
   }
 
+  /**
+   * Callback for when a tab is clicked.
+   *
+   * Displays the tab at the given [index].
+   */
   void _onSelected(int index)
   {
     int length = _tabs.length;

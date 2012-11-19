@@ -98,83 +98,83 @@ class RendererSelection
   // Construction
   //---------------------------------------------------------------------
 
+  /**
+   * Creates an instance of the [RendererSelection] state.
+   */
   RendererSelection()
   {
-    // Setup the rasterizer state
-    _rasterizerStateEnabledElement = _queryInput(_rasterizerStateEnabledId);
+    _setupRasterizerState();
+    _setupDepthState();
+    _setupBlendState();
+  }
+
+  /**
+   * Sets up the [RasterizerState] UI.
+   */
+  void _setupRasterizerState()
+  {
+    _rasterizerStateEnabledElement = query(_rasterizerStateEnabledId);
     _rasterizerStateEnabledElement.on.change.add((_) { _onRasterizerStateChanged(); });
 
-    _rasterizerStateCullModeElement = _querySelect(_rasterizerStateCullModeId);
+    _rasterizerStateCullModeElement = query(_rasterizerStateCullModeId);
     _rasterizerStateCullModeElement.on.change.add((_) { _onRasterizerStateChanged(); });
 
-    _rasterizerStateFrontFaceElement = _querySelect(_rasterizerStateFrontFaceId);
+    _rasterizerStateFrontFaceElement = query(_rasterizerStateFrontFaceId);
     _rasterizerStateFrontFaceElement.on.change.add((_) { _onRasterizerStateChanged(); });
+  }
 
-    // Setup the depth state
-    _depthStateEnabledElement = _queryInput(_depthStateEnabledId);
+  /**
+   * Sets up the [DepthState] UI.
+   */
+  void _setupDepthState()
+  {
+    _depthStateEnabledElement = query(_depthStateEnabledId);
     _depthStateEnabledElement.on.change.add((_) { _onDepthStateChanged(); });
 
-    _depthStateWriteEnabledElement = _queryInput(_depthStateWriteEnabledId);
+    _depthStateWriteEnabledElement = query(_depthStateWriteEnabledId);
     _depthStateWriteEnabledElement.on.change.add((_) { _onDepthStateChanged(); });
 
-    _depthStateComparisonElement = _querySelect(_depthStateComparisonId);
+    _depthStateComparisonElement = query(_depthStateComparisonId);
     _depthStateComparisonElement.on.change.add((_) { _onDepthStateChanged(); });
+  }
 
-    // Setup the blend state
-    _blendStateEnabledElement = _queryInput(_blendStateEnabledId);
+  /**
+   * Sets up the [BlendState] UI.
+   */
+  void _setupBlendState()
+  {
+    _blendStateEnabledElement = query(_blendStateEnabledId);
     _blendStateEnabledElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendStateSourceColorElement = _querySelect(_blendStateSourceColorId);
+    _blendStateSourceColorElement = query(_blendStateSourceColorId);
     _blendStateSourceColorElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendStateDestinationColorElement = _querySelect(_blendStateDestinationColorId);
+    _blendStateDestinationColorElement = query(_blendStateDestinationColorId);
     _blendStateDestinationColorElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendSourceAlphaElement = _querySelect(_blendStateSourceAlphaId);
+    _blendSourceAlphaElement = query(_blendStateSourceAlphaId);
     _blendSourceAlphaElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendDestinationAlphaElement = _querySelect(_blendStateDestinationAlphaId);
+    _blendDestinationAlphaElement = query(_blendStateDestinationAlphaId);
     _blendDestinationAlphaElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendColorOperationElement = _querySelect(_blendStateColorOperationId);
+    _blendColorOperationElement = query(_blendStateColorOperationId);
     _blendColorOperationElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendAlphaOperationElement = _querySelect(_blendStateAlphaOperationId);
+    _blendAlphaOperationElement = query(_blendStateAlphaOperationId);
     _blendAlphaOperationElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendStateWriteRedElement = _queryInput(_blendStateWriteRedId);
+    _blendStateWriteRedElement = query(_blendStateWriteRedId);
     _blendStateWriteRedElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendStateWriteGreenElement = _queryInput(_blendStateWriteGreenId);
+    _blendStateWriteGreenElement = query(_blendStateWriteGreenId);
     _blendStateWriteGreenElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendStateWriteBlueElement = _queryInput(_blendStateWriteBlueId);
+    _blendStateWriteBlueElement = query(_blendStateWriteBlueId);
     _blendStateWriteBlueElement.on.change.add((_) { _onBlendStateChanged(); });
 
-    _blendStateWriteAlphaElement = _queryInput(_blendStateWriteAlphaId);
+    _blendStateWriteAlphaElement = query(_blendStateWriteAlphaId);
     _blendStateWriteAlphaElement.on.change.add((_) { _onBlendStateChanged(); });
-  }
-
-  /**
-   * Helper method to query the document for the given [id].
-   */
-  static InputElement _queryInput(id)
-  {
-    InputElement element = query(id) as InputElement;
-    assert(element != null);
-
-    return element;
-  }
-
-  /**
-   * Helper method to query the document for the given [id].
-   */
-  static SelectElement _querySelect(id)
-  {
-    SelectElement element = query(id) as SelectElement;
-    assert(element != null);
-
-    return element;
   }
 
   //---------------------------------------------------------------------

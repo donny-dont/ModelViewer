@@ -69,6 +69,9 @@ class Viewer
     _applicationFileSystem = new ApplicationFileSystem();
 
     _modelSelection = new ModelSelection();
+    _modelSelection.modelChangedCallback = _onModelChanged;
+    _modelSelection.modelLoadedCallback = _onModelLoaded;
+
     _textureSelection = new TextureSelection();
     _textureSelection.textureCallback = _onTextureChanged;
     _rendererSelection = new RendererSelection();
@@ -181,6 +184,25 @@ class Viewer
   // Events
   //---------------------------------------------------------------------
 
+  /**
+   * Callback for when a model is changed.
+   */
+  void _onModelChanged(String url)
+  {
+    Game.instance.mesh = url;
+  }
+
+  /**
+   * Callback for when a model is loaded.
+   */
+  void _onModelLoaded(File file)
+  {
+
+  }
+
+  /**
+   * Callback for when a [Texture] is changed.
+   */
   void _onTextureChanged(File file, int textureUnit)
   {
     _currentWorkspace.saveTexture(file, textureUnit).then((value) {

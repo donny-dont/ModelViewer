@@ -1,6 +1,6 @@
 part of viewer;
 
-/// Callback type for when the texture is changed
+/// Callback type for when the texture is changed.
 typedef void TextureChangedEvent(File file, int textureUnit);
 
 /**
@@ -109,7 +109,6 @@ class TextureUnit
       e.stopPropagation();
       e.preventDefault();
 
-      print('dropped');
       textureDropArea.classes.remove('drag_over');
       textureDropArea.classes.add('drag_none');
 
@@ -253,16 +252,20 @@ class TextureUnit
   // Events
   //---------------------------------------------------------------------
 
+  /**
+   * Callback for when the [Texture] is changed.
+   */
   void _onTextureChanged(List<File> files)
   {
-    print(files.length);
     if ((textureCallback != null) && (files.length > 0))
     {
-      print('TextureUnit._onTextureChanged');
       textureCallback(files[0], _location);
     }
   }
 
+  /**
+   * Callback for when the [SampleState] is changed.
+   */
   void _onSamplerStateChanged(_)
   {
 
@@ -368,6 +371,9 @@ class TextureSelection
   // Events
   //---------------------------------------------------------------------
 
+  /**
+   * Callback for when a [Texture] is changed.
+   */
   void _onTextureChanged(File file, int textureUnit)
   {
     // Propagate the event
