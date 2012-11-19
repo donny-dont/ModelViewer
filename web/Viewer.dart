@@ -20,6 +20,8 @@ part 'ui/new_file.dart';
 part 'ui/tabbed_element.dart';
 part 'ui/texture_selection.dart';
 part 'ui/renderer_selection.dart';
+part 'workspace/application_file_system.dart';
+part 'workspace/workspace.dart';
 
 /// Instance of the [Viewer] class.
 Viewer _viewer;
@@ -37,6 +39,10 @@ class Viewer
   // Member variables
   //---------------------------------------------------------------------
 
+  /// The [ApplicationFilesystem].
+  ApplicationFileSystem _applicationFileSystem;
+  /// The current [Workspace].
+  Workspace _currentWorkspace;
   /// UI for the model tab.
   ModelSelection _modelSelection;
   /// UI for the textures tab.
@@ -53,6 +59,8 @@ class Viewer
    */
   Viewer()
   {
+    _applicationFileSystem = new ApplicationFileSystem();
+
     _modelSelection = new ModelSelection();
     _textureSelection = new TextureSelection();
     _rendererSelection = new RendererSelection();
@@ -100,6 +108,11 @@ class Viewer
    */
   void newFile()
   {
+    _applicationFileSystem.createWorkspace().then((workspace) {
+      print('workspace created');
+      _currentWorkspace = workspace;
+    });
+
     loadFile(_newFileState);
   }
 

@@ -8,6 +8,9 @@ class ModelSelection
   /// Text to display when hovering over the drop area.
   static const String _dropText = 'Drag and Drop a Model to Change';
 
+  /**
+   * Creates an instance of the [ModelSelection] class.
+   */
   ModelSelection()
   {
     _addModelArea();
