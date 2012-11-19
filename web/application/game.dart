@@ -16,6 +16,12 @@ class Game
   static const int _keyCodeS = 83;
   /// Move camera forward.
   static const int _keyCodeW = 87;
+  /**
+   * The maximum number of textures WebGL supports
+   *
+   * This might not be the number the current graphics card supports.
+   */
+  static const int _maxTextureUnits = 16;
 
   //---------------------------------------------------------------------
   // Member variables
@@ -104,8 +110,10 @@ class Game
   int _meshIndexBuffer;
   /// The number of indices in the buffer
   int _meshIndexCount;
-  /// Handle to the texture to use.
-  int _texture;
+  /// Maximum supported textures
+  int _maxTextures;
+  /// Handles to the textures to use.
+  List<int> _textures;
 
   //---------------------------------------------------------------------
   // Shader variables
@@ -144,6 +152,10 @@ class Game
    * A handle to the fallback shader program to use.
    */
   int _fallbackShaderProgram;
+  /**
+   * The uniforms associated with the shader.
+   */
+  Map<String, String> _shaderUniforms;
 
   //---------------------------------------------------------------------
   // State variables
@@ -155,8 +167,8 @@ class Game
   int _depthState;
   /// Contains rasterization state for the device.
   int _rasterizerState;
-  /// Contains sampler state for a texture.
-  int _samplerState;
+  /// Contains sampler states for a texture.
+  List<int> _samplerStates;
 
   //---------------------------------------------------------------------
   // Construction
@@ -352,6 +364,8 @@ class Game
    */
   void _createShaders()
   {
+    _shaderUniforms = new Map<String, String>();
+
     // Create the fallback shader program
     _fallbackShaderProgram = _graphicsDevice.createShaderProgram('Fallback Program', {});
 
@@ -409,10 +423,15 @@ class Game
 
     _depthState = _graphicsDevice.createDepthState('Depth State', depthStateProperties);
 
-    // Create the sampler state
+    // Create the sampler states
     Map samplerStateProperties = { };
+    _samplerStates = new List<int>();
 
-    _samplerState = _graphicsDevice.createSamplerState('Sampler State', samplerStateProperties);
+    for (int i = 0; i < _maxTextureUnits; ++i)
+    {
+      int samplerState = _graphicsDevice.createSamplerState('Sampler State $i', samplerStateProperties);
+      _samplerStates.add(samplerState);
+    }
 
     // Create the rasterizer state
     Map rasterizerStateProperties = {
@@ -449,7 +468,13 @@ class Game
       'pixelFormat': Texture.PixelFormatUnsignedByte
     };
 
-    _texture = _graphicsDevice.createTexture2D('Texture', textureUsage);
+    _textures = new List<int>();
+
+    for (int i = 0; i < _maxTextureUnits; ++i)
+    {
+      int texture = _graphicsDevice.createTexture2D('Texture $i', textureUsage);
+      _textures.add(texture);
+    }
   }
 
   //---------------------------------------------------------------------
@@ -531,8 +556,8 @@ class Game
     _context.setUniformMatrix4('cameraTransform', _viewProjectitonMatrixArray);
 
     // Set the texture
-    _context.setTextures(0, [_texture]);
-    _context.setSamplers(0, [_samplerState]);
+    _context.setTextures(0, _textures);
+    _context.setSamplers(0, _samplerStates);
 
     // Set the vertex/index buffers
     _context.setInputLayout(_meshInputLayout);
@@ -586,17 +611,17 @@ class Game
   /**
    * Sets the texture to use on the mesh.
    */
-  set texture(String value)
+  void setTextureAt(int i, String value)
   {
     int textureResource = _resourceManager.registerResource(value);
 
     _resourceManager.addEventCallback(textureResource, ResourceEvents.TypeUpdate, (type, resource) {
-      print('texture loaded: ${_texture}');
-      _context.updateTexture2DFromResource(_texture, textureResource, _resourceManager);
-      _context.generateMipmap(_texture);
+      int texture = _textures[i];
+      _context.updateTexture2DFromResource(texture, textureResource, _resourceManager);
+      _context.generateMipmap(texture);
     });
 
-    _resourceManager.loadResource(textureResource);
+    _resourceManager.loadResource(textureResource, true);
   }
 
   /**
@@ -664,6 +689,11 @@ class Game
   }
 
   /**
+   * Gets the uniforms contained in the program.
+   */
+  Map<String, String> get uniforms => _shaderUniforms;
+
+  /**
    * Reconfigure the vertex shader for the rendering.
    */
   void setVertexSource(String source)
@@ -673,7 +703,7 @@ class Game
     ShaderProgram program = _graphicsDevice.getDeviceChild(_userShaderProgram);
     program.link();
 
-    _shaderProgram = (isProgramValid) ? _userShaderProgram : _fallbackShaderProgram;
+    _checkProgram();
   }
 
   /**
@@ -686,8 +716,39 @@ class Game
     ShaderProgram program = _graphicsDevice.getDeviceChild(_userShaderProgram);
     program.link();
 
-    _shaderProgram = (isProgramValid) ? _userShaderProgram : _fallbackShaderProgram;
+    _checkProgram();
   }
+
+  /**
+   * Checks to see if the program is valid.
+   */
+  void _checkProgram()
+  {
+    if (isProgramValid)
+    {
+      _shaderProgram = _userShaderProgram;
+
+      // Get the shader uniforms
+      _shaderUniforms.clear();
+
+      ShaderProgram program = _graphicsDevice.getDeviceChild(_userShaderProgram);
+      program.forEachUniforms(_getShaderUniforms);
+    }
+    else
+    {
+      _shaderProgram = _fallbackShaderProgram;
+    }
+  }
+
+  /**
+   * Queries the shader program for all the associated uniforms.
+   */
+  void _getShaderUniforms(String name, int index, String type, int size, WebGLUniformLocation location)
+  {
+    print('Name: $name');
+    print('Type: $type');
+  }
+
 
   //---------------------------------------------------------------------
   // Static methods
@@ -701,7 +762,7 @@ class Game
     _gameInstance = new Game('#webgl_host');
 
     // Set the mesh and associated texture
-    _gameInstance.texture = 'web/resources/textures/dart_tex_alpha.png';
+    _gameInstance.setTextureAt(0, 'web/resources/textures/dart_tex.png');
     _gameInstance.mesh = 'web/resources/meshes/cube.mesh';
   }
 

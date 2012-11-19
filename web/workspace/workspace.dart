@@ -19,9 +19,14 @@ class Workspace
     _directory = entry;
   }
 
+  /**
+   * Saves a [Texture] to the file system.
+   */
   Future<String> saveTexture(File file, int textureUnit)
   {
-    String filename = 'texture$textureUnit';
+    String originalFilename = file.name;
+    String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+    String filename = 'texture${textureUnit}$extension';
     Completer completer = new Completer();
 
     _writeFile(completer, filename, file);

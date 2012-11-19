@@ -68,13 +68,20 @@ class Viewer
   {
     _applicationFileSystem = new ApplicationFileSystem();
 
+    // Attach to the model UI
     _modelSelection = new ModelSelection();
     _modelSelection.modelChangedCallback = _onModelChanged;
     _modelSelection.modelLoadedCallback = _onModelLoaded;
 
+    // Attach to the texture UI
     _textureSelection = new TextureSelection();
     _textureSelection.textureCallback = _onTextureChanged;
+
+    // Attach to the renderer UI
     _rendererSelection = new RendererSelection();
+    _rendererSelection.blendStateCallback = _onBlendStateChanged;
+    _rendererSelection.depthStateCallback = _onDepthStateChanged;
+    _rendererSelection.rasterizerStateCallback = _onRasterizerStateChanged;
 
     _setupMenuBar();
     _setupUITab();
@@ -206,10 +213,38 @@ class Viewer
   void _onTextureChanged(File file, int textureUnit)
   {
     _currentWorkspace.saveTexture(file, textureUnit).then((value) {
+      print('Texture changed $value');
       // Display the new texture
       _textureSelection.textureUnits[textureUnit].texture = value;
+
+      Game.instance.setTextureAt(textureUnit, value);
     });
   }
+
+  /**
+   * Callback when the rasterizer state is changed.
+   */
+  void _onRasterizerStateChanged(String properties)
+  {
+    Game.instance.setRasterizerStateProperties(properties);
+  }
+
+  /**
+   * Callback when the depth state is changed.
+   */
+  void _onDepthStateChanged(String properties)
+  {
+    Game.instance.setDepthStateProperties(properties);
+  }
+
+  /**
+   * Callback when the blend state is changed.
+   */
+  void _onBlendStateChanged(String properties)
+  {
+    Game.instance.setBlendStateProperties(properties);
+  }
+
 }
 
 /**
@@ -237,6 +272,11 @@ void main()
   // Initialize the WebGL side
   Game.onInitialize();
   _counter = new FrameCounter('#frame_counter');
+
+  Game.instance.setVertexSource(_defaultVertexSource);
+  Game.instance.setFragmentSource(_defaultFragmentSource);
+
+
 
   window.requestAnimationFrame(_onUpdate);
 }

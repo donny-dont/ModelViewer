@@ -44,7 +44,7 @@ class RendererSelection
   //---------------------------------------------------------------------
 
   /// Callback for when the [RasterizerState] changes.
-  StateEvent rasterizerCallback;
+  StateEvent rasterizerStateCallback;
   /// Whether the rasterizer state is enabled.
   InputElement _rasterizerStateEnabledElement;
   /// Culling mode to use.
@@ -315,7 +315,7 @@ class RendererSelection
    */
   void _onRasterizerStateChanged()
   {
-    if (rasterizerCallback != null)
+    if (rasterizerStateCallback != null)
     {
       String props =
       '''
@@ -326,7 +326,7 @@ class RendererSelection
 }
       ''';
 
-      rasterizerCallback(props);
+      rasterizerStateCallback(props);
     }
   }
 
@@ -377,5 +377,4 @@ class RendererSelection
       blendStateCallback(props);
     }
   }
-
 }
