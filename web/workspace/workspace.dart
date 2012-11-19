@@ -21,13 +21,18 @@ class Workspace
 
   Future<String> saveTexture(File file, int textureUnit)
   {
+    String filename = 'texture$textureUnit';
+    Completer completer = new Completer();
 
+    _writeFile(completer, filename, file);
+
+    return completer.future;
   }
 
   /**
    * Write a file to the local filesystem.
    */
-  void _writeFile(String fileName, Blob data)
+  void _writeFile(Completer completer, String fileName, Blob data)
   {
     Map options = { 'create': true };
 
@@ -36,7 +41,7 @@ class Workspace
         fileWriter.on.writeEnd.add((_) {
           String url = fileEntry.toURL();
 
-          //submitCallback(url);
+          completer.complete(url);
         });
 
         fileWriter.write(data);

@@ -63,6 +63,7 @@ class Viewer
 
     _modelSelection = new ModelSelection();
     _textureSelection = new TextureSelection();
+    _textureSelection.textureCallback = _onTextureChanged;
     _rendererSelection = new RendererSelection();
 
     _setupMenuBar();
@@ -167,6 +168,18 @@ class Viewer
   {
     _rendererSelection.fromJson(data);
     _textureSelection.fromJson(data);
+  }
+
+  //---------------------------------------------------------------------
+  // Events
+  //---------------------------------------------------------------------
+
+  void _onTextureChanged(File file, int textureUnit)
+  {
+    _currentWorkspace.saveTexture(file, textureUnit).then((value) {
+      // Display the new texture
+      _textureSelection.textureUnits[textureUnit].texture = value;
+    });
   }
 }
 

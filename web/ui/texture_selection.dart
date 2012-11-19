@@ -1,5 +1,8 @@
 part of viewer;
 
+/// Callback type for when the texture is changed
+typedef void TextureChangedEvent(File file, int textureUnit);
+
 /**
  * UI for individual texture units.
  */
@@ -29,6 +32,8 @@ class TextureUnit
 
   /// The location of the texture unit.
   int _location;
+  /// Callback for when a texture change request occurs.
+  TextureChangedEvent textureCallback;
   /// The element containing all the texture state information.
   DivElement _element;
   /// The element containing the texture.
@@ -92,13 +97,23 @@ class TextureUnit
 
     textureArea.nodes.add(textureDropArea);
 
-    textureArea.on.dragEnter.add((_) {
+    textureArea.on.dragEnter.add((e) {
       textureDropArea.classes.remove('drag_none');
       textureDropArea.classes.add('drag_over');
     });
-    textureArea.on.dragLeave.add((_) {
+    textureArea.on.dragLeave.add((e) {
       textureDropArea.classes.remove('drag_over');
       textureDropArea.classes.add('drag_none');
+    });
+    textureArea.on.drop.add((e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      print('dropped');
+      textureDropArea.classes.remove('drag_over');
+      textureDropArea.classes.add('drag_none');
+
+      _onTextureChanged(e.dataTransfer.files);
     });
 
     textureArea.on.mouseOver.add((_) {
@@ -198,6 +213,10 @@ class TextureUnit
   /// The element containing all the texture state information
   DivElement get element => _element;
 
+  /// The texture image contained in the [TextureUnit].
+  String get texture => _textureDisplay.src;
+  set texture(String value) { _textureDisplay.src = value; }
+
   //---------------------------------------------------------------------
   // Serialization
   //---------------------------------------------------------------------
@@ -234,9 +253,14 @@ class TextureUnit
   // Events
   //---------------------------------------------------------------------
 
-  void _onTextureChanged()
+  void _onTextureChanged(List<File> files)
   {
-
+    print(files.length);
+    if ((textureCallback != null) && (files.length > 0))
+    {
+      print('TextureUnit._onTextureChanged');
+      textureCallback(files[0], _location);
+    }
   }
 
   void _onSamplerStateChanged(_)
@@ -269,6 +293,8 @@ class TextureSelection
 
   /// The [DivElement] containing the Texture
   DivElement _parent;
+  /// Callback for when a texture change request occurs.
+  TextureChangedEvent textureCallback;
   /// The individual [TextureUnit]s.
   List<TextureUnit> _textureUnits;
 
@@ -289,11 +315,19 @@ class TextureSelection
     for (int i = 0; i < _maxTextureUnits; ++i)
     {
       TextureUnit textureUnit = new TextureUnit(i);
+      textureUnit.textureCallback = _onTextureChanged;
 
       _textureUnits.add(textureUnit);
       _parent.nodes.add(textureUnit.element);
     }
   }
+
+  //---------------------------------------------------------------------
+  // Properties
+  //---------------------------------------------------------------------
+
+  /// The individual [TextureUnit]s.
+  List<TextureUnit> get textureUnits => _textureUnits;
 
   //---------------------------------------------------------------------
   // Serialization
@@ -334,4 +368,12 @@ class TextureSelection
   // Events
   //---------------------------------------------------------------------
 
+  void _onTextureChanged(File file, int textureUnit)
+  {
+    // Propagate the event
+    if (textureCallback != null)
+    {
+      textureCallback(file, textureUnit);
+    }
+  }
 }
