@@ -8,6 +8,14 @@ class Game
 
   /// Singleton holding the [Game] instance.
   static Game _gameInstance;
+  /// Move camera to the left.
+  static const int _keyCodeA = 65;
+  /// Move camera to the right.
+  static const int _keyCodeD = 68;
+  /// Move camera backwards.
+  static const int _keyCodeS = 83;
+  /// Move camera forward.
+  static const int _keyCodeW = 87;
 
   //---------------------------------------------------------------------
   // Member variables
@@ -19,16 +27,6 @@ class Game
   GraphicsDevice _graphicsDevice;
   /// Immediate rendering context.
   GraphicsContext _context;
-
-  /**
-   * Retained mode debug draw manager.
-   *
-   * Can draw many different debug primitives for a specified time length.
-   */
-  DebugDrawManager _debugDrawManager;
-  /// Whether debug info should be drawn
-  bool _showDebugInfo;
-  bool _debugDrawCameraTransform;
 
   /**
    * Resource handler for the game.
@@ -189,14 +187,6 @@ class Game
     // Setup the resource manager
     _resourceManager = new ResourceManager();
 
-
-    // Create the debug draw manager.
-    _debugDrawManager = new DebugDrawManager();
-    _showDebugInfo = false;
-    _debugDrawCameraTransform = false;
-    // Initialize it to use our Spectre graphics device.
-    _debugDrawManager.init(_graphicsDevice);
-
     // Create the viewport
     var viewportProperties = {
       'x': 0,
@@ -223,29 +213,25 @@ class Game
     _cameraController = new MouseKeyboardCameraController();
     // Bind the controls for the camera
     _bindControls();
+
+    // Create graphics resources
     _createTransforms();
     _createShaders();
     _createState();
     _createBuffers();
   }
 
-  /* Keyboard key codes */
-  static const _keyCodeA = 65;
-  static const _keyCodeD = 68;
-  static const _keyCodeS = 83;
-  static const _keyCodeT = 84;
-  static const _keyCodeW = 87;
-  static const _keyCodeU = 85;
-
   /**
    * Responds to key down events
    */
   void _keyDownHandler(KeyboardEvent event) {
-    if (!_pointerLocked) {
+    if (!_pointerLocked)
+    {
       return;
     }
 
-    switch (event.keyCode) {
+    switch (event.keyCode)
+    {
       case _keyCodeA:
         _cameraController.strafeLeft = true;
       break;
@@ -258,9 +244,6 @@ class Game
       case _keyCodeW:
         _cameraController.forward = true;
       break;
-      case _keyCodeT:
-        _debugDrawCameraTransform = true;
-      break;
     }
   }
 
@@ -268,7 +251,8 @@ class Game
    * Responds to key up events
    */
   void _keyUpHandler(KeyboardEvent event) {
-    switch (event.keyCode) {
+    switch (event.keyCode)
+    {
       case _keyCodeA:
         _cameraController.strafeLeft = false;
       break;
@@ -281,9 +265,6 @@ class Game
       case _keyCodeW:
         _cameraController.forward = false;
       break;
-      case _keyCodeU:
-        _showDebugInfo = !_showDebugInfo;
-      break;
     }
   }
 
@@ -291,21 +272,23 @@ class Game
    * Responds to mouse move events
    */
   void _mouseMoveHandler(MouseEvent event) {
-    if (_pointerLocked) {
+    if (_pointerLocked)
+    {
       _cameraController.accumDX += event.webkitMovementX;
       _cameraController.accumDY += event.webkitMovementY;
     }
   }
 
-  bool get _pointerLocked => _canvas == document.webkitPointerLockElement;
-
   /**
    * Respond to pointer lock state changes.
    */
   void _pointerLockChange(Event event) {
-    if (_pointerLocked) {
+    if (_pointerLocked)
+    {
       print('Canvas owns pointer.');
-    } else {
+    }
+    else
+    {
       print('Canvas does not own pointer.');
     }
   }
@@ -335,13 +318,6 @@ class Game
   void _updateCameraTransform() {
     mat4 viewProjectionMatrix = _camera.projectionMatrix;
     mat4 viewMatrix = _camera.lookAtMatrix;
-    if (_debugDrawCameraTransform) {
-      mat4 T = new mat4.copy(viewMatrix);
-      T[2].scale(-1.0);
-      T[3].xyz = _camera.position;
-      _debugDrawManager.addAxes(T, 2.0, 2.0);
-      _debugDrawCameraTransform = false;
-    }
     viewProjectionMatrix.multiply(viewMatrix);
     // Copy into
     viewProjectionMatrix.copyIntoArray(_viewProjectitonMatrixArray);
@@ -476,77 +452,6 @@ class Game
     _texture = _graphicsDevice.createTexture2D('Texture', textureUsage);
   }
 
-  void _drawGridRaw(int gridLines, vec3 x, vec3 z, vec4 color) {
-    final double midLine = (gridLines~/2).toDouble();
-    vec3 o = new vec3.zero();
-    o.sub(z*midLine);
-    o.sub(x*midLine);
-
-    for (int i = 0; i <= gridLines; i++) {
-      vec3 start = o + (z * (i-midLine)) + (x * -midLine);
-      vec3 end = o + (z * (i-midLine)) + (x * midLine);
-      _debugDrawManager.addLine(start, end, color);
-    }
-
-    for (int i = 0; i <= gridLines; i++) {
-      vec3 start = o + (x * (i-midLine)) + (z * -midLine);
-      vec3 end = o + (x * (i-midLine)) + (z * midLine);
-      _debugDrawManager.addLine(start, end, color);
-    }
-  }
-
-  void _drawDebugGrid() {
-    _drawGridRaw(4, new vec3.raw(1.0, 0.0, 0.0),
-                     new vec3.raw(0.0, 0.0, 1.0),
-                     new vec4.raw(1.0, 1.0, 1.0, 1.0));
-  }
-
-  Map<String, vec4> _colors = {
-    'Red': new vec4(1.0, 0.0, 0.0, 1.0),
-    'Green': new vec4(0.0, 1.0, 0.0, 1.0),
-    'Blue': new vec4(0.0, 0.0, 1.0, 1.0),
-    'Gray': new vec4(0.3, 0.3, 0.3, 1.0),
-    'White': new vec4(1.0, 1.0, 1.0, 1.0),
-    'Orange': new vec4(1.0, 0.6475, 0.0, 1.0)
-  };
-
-  vec3 _unitX = new vec3(1.0, 0.0, 0.0);
-  vec3 _unitY = new vec3(0.0, 1.0, 0.0);
-  vec3 _unitZ = new vec3(0.0, 0.0, 1.0);
-  vec3 _origin = new vec3(0.0, 0.0, 0.0);
-
-  mat4 _rotateX = new mat4.identity();
-  mat4 _rotateY = new mat4.identity();
-  mat4 _rotateZ = new mat4.identity();
-
-  /* Draw a bunch of debug primitives */
-  void _drawDebugPrims(double dt) {
-    double deltaAngle = dt * Math.PI;
-    _angle += deltaAngle;
-    double _scale = (sin(_angle) + 1.0)/2.0;
-
-    _rotateX.rotateX(deltaAngle);
-    _rotateY.rotateY(deltaAngle);
-    _rotateZ.rotateZ(deltaAngle);
-
-    // Rotating circles
-    {
-      _debugDrawManager.addCircle(new vec3(0.0, 10.0, 0.0), _rotateY.transformed3(_unitX), 3.14, _colors['Red']);
-      _debugDrawManager.addCircle(new vec3(0.0, 0.0, 10.0), _rotateZ.transformed3(_unitY), 3.14, _colors['Green']);
-      _debugDrawManager.addCircle(new vec3(10.0, 0.0, 0.0), _rotateX.transformed3(_unitZ), 3.14, _colors['Blue']);
-    }
-
-
-    // AABB and a line from min to max
-    {
-      _debugDrawManager.addAABB(new vec3(5.0, 5.0, 5.0), new vec3(10.0, 10.0, 10.0), _colors['Gray']);
-      _debugDrawManager.addCross(new vec3(5.0, 5.0, 5.0), _colors['White']);
-      _debugDrawManager.addCross(new vec3(10.0, 10.0, 10.0), _colors['White']);
-      _debugDrawManager.addLine(new vec3(5.0, 5.0, 5.0), new vec3(10.0, 10.0, 10.0), _colors['Orange']);
-    }
-  }
-
-
   //---------------------------------------------------------------------
   // Public methods
   //---------------------------------------------------------------------
@@ -562,8 +467,7 @@ class Game
     // Get the change in time
     double dt = (time - _lastFrameTime) * 0.001;
     _lastFrameTime = time;
-    // Update the debug draw world
-    _debugDrawManager.update(dt);
+
     // Update the camera
     _cameraController.UpdateCamera(dt, _camera);
     _updateCameraTransform();
@@ -593,15 +497,6 @@ class Game
         _color[i] = 0.0;
         _direction[i] = 1.0;
       }
-    }
-
-    if (_showDebugInfo)
-    {
-      _drawDebugGrid();
-      _drawDebugPrims(dt);
-
-      // Prepare the debug draw manager to render.
-      _debugDrawManager.prepareForRender();
     }
   }
 
@@ -647,11 +542,6 @@ class Game
     // Draw the mesh
     _context.setPrimitiveTopology(GraphicsContext.PrimitiveTopologyTriangles);
     _context.drawIndexed(_meshIndexCount, 0);
-
-    if (_showDebugInfo)
-    {
-      _debugDrawManager.render(_camera);
-    }
   }
 
   //---------------------------------------------------------------------
@@ -660,6 +550,8 @@ class Game
 
   /// Retrieves the instance of [Game].
   static Game get instance => _gameInstance;
+  /// Whether the canvas has control of the pointer.
+  bool get _pointerLocked => _canvas == document.webkitPointerLockElement;
 
   /**
    * Sets the mesh to display.

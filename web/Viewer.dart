@@ -227,6 +227,9 @@ void _onUpdate(double time)
   window.requestAnimationFrame(_onUpdate);
 }
 
+/**
+ * Main entrypoint to the application.
+ */
 void main()
 {
   _viewer = new Viewer();
