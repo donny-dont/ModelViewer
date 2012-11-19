@@ -1,5 +1,5 @@
-name: DartWebGLCodelabLesson2
-description: WebGL
+name: modelviewer
+description: WebGL Shader and Texture editor
 version: 1.0.0
 dependencies:
   logging: 
