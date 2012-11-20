@@ -10,8 +10,11 @@ attribute vec3 vPosition;
 attribute vec2 vTexCoord;
 
 // Uniform variables
-uniform mat4 objectTransform;
-uniform mat4 cameraTransform;
+uniform mat4 uModelMatrix;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uModelViewProjectionMatrix;
+uniform mat4 uProjectionMatrix;
+uniform mat4 uNormalMatrix;
 
 // Varying variables
 // Allows communication between vertex and fragment stages
@@ -19,7 +22,7 @@ varying vec2 samplePoint;
 
 void main() {
     vec4 vPosition4 = vec4(vPosition.x, vPosition.y, vPosition.z, 1.0);
-    gl_Position = (cameraTransform*objectTransform)*vPosition4;
+    gl_Position = uModelViewProjectionMatrix * vPosition4;
     samplePoint = vTexCoord;
 }
 ''';

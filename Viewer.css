@@ -227,6 +227,18 @@ textarea {
   .sampler_state select {
     width: 180px; }
 
+/* Uniform UI */
+#uniform_area tr:nth-child(odd) {
+  background: white; }
+#uniform_area tr:nth-child(even) {
+  background: #f8f8f8; }
+
+.uniform_table {
+  width: 100%; }
+
+.uniform_name {
+  font-weight: bold; }
+
 /* Renderer UI */
 #renderer_area select {
   width: 150px; }

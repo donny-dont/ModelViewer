@@ -25,6 +25,7 @@ part 'ui/new_file.dart';
 part 'ui/tabbed_element.dart';
 part 'ui/texture_selection.dart';
 part 'ui/renderer_selection.dart';
+part 'ui/uniform_selection.dart';
 part 'workspace/application_file_system.dart';
 part 'workspace/workspace.dart';
 
@@ -54,6 +55,8 @@ class Viewer
   ModelSelection _modelSelection;
   /// UI for the textures tab.
   TextureSelection _textureSelection;
+  /// UI for the uniforms tab.
+  UniformSelection _uniformSelection;
   /// UI for the renderer tab.
   RendererSelection _rendererSelection;
 
@@ -76,6 +79,9 @@ class Viewer
     // Attach to the texture UI
     _textureSelection = new TextureSelection();
     _textureSelection.textureCallback = _onTextureChanged;
+
+    // Attach to the uniform UI
+    _uniformSelection = new UniformSelection();
 
     // Attach to the renderer UI
     _rendererSelection = new RendererSelection();

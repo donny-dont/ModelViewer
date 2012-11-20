@@ -210,6 +210,24 @@ textarea {
   }
 }
 
+/* Uniform UI */
+
+#uniform_area
+{
+  tr:nth-child(odd)  { background: $tab_background_color; }
+  tr:nth-child(even) { background: $background_color; }
+}
+
+.uniform_table
+{
+  width: 100%;
+}
+
+.uniform_name
+{
+  font-weight: bold;
+}
+
 /* Renderer UI */
 
 #renderer_area

@@ -73,17 +73,6 @@ class Game
   mat4 _modelMatrix;
   /// A typed array containing the transformation.
   Float32Array _modelMatrixArray;
-  /**
-   * A [Float32Array] containing the view/projection matrix.
-   *
-   * Contains the view, which is generated from the camera's position,
-   * direction, and up vector, and the projection, which is generated
-   * from the view frustum.
-   *
-   * The camera is stationary in this lesson so an associated mat4
-   * is not needed.
-   */
-  Float32Array _viewProjectitonMatrixArray;
 
   //---------------------------------------------------------------------
   // Buffer variables
@@ -154,8 +143,37 @@ class Game
   int _fallbackShaderProgram;
   /**
    * The uniforms associated with the shader.
+   *
+   * This is the names not the values actually being used.
    */
   Map<String, String> _shaderUniforms;
+  /**
+   * The uniform values for the shader.
+   *
+   * These are the actual values being used.
+   */
+  Map<String, Map<String, dynamic>> _shaderUniformValues;
+
+  //---------------------------------------------------------------------
+  // Builtin shader uniform variables
+  //---------------------------------------------------------------------
+
+  /**
+   * A [Float32Array] containing the model/view matrix.
+   */
+  Float32Array _modelViewMatrixArray;
+  /**
+   * A [Float32Array] containing the model/view/projection matrix.
+   */
+  Float32Array _modelViewProjectionMatrixArray;
+  /**
+   * A [Float32Array] containing the projection matrix.
+   */
+  Float32Array _projectionMatrixArray;
+  /**
+   * A [Float32Array] containing the normal matrix.
+   */
+  Float32Array _normalMatrixArray;
 
   //---------------------------------------------------------------------
   // State variables
@@ -236,7 +254,8 @@ class Game
   /**
    * Responds to key down events
    */
-  void _keyDownHandler(KeyboardEvent event) {
+  void _keyDownHandler(KeyboardEvent event)
+  {
     if (!_pointerLocked)
     {
       return;
@@ -262,7 +281,8 @@ class Game
   /**
    * Responds to key up events
    */
-  void _keyUpHandler(KeyboardEvent event) {
+  void _keyUpHandler(KeyboardEvent event)
+  {
     switch (event.keyCode)
     {
       case _keyCodeA:
@@ -294,7 +314,8 @@ class Game
   /**
    * Respond to pointer lock state changes.
    */
-  void _pointerLockChange(Event event) {
+  void _pointerLockChange(Event event)
+  {
     if (_pointerLocked)
     {
       print('Canvas owns pointer.');
@@ -308,7 +329,8 @@ class Game
   /**
    * Respond to clicks on the canvas
    */
-  void _canvasClicked(Event event) {
+  void _canvasClicked(Event event)
+  {
     // Request pointer lock
     _canvas.webkitRequestPointerLock();
   }
@@ -316,23 +338,13 @@ class Game
   /**
    * Bind the keyboard and mouse to the camera controller
    */
-  void _bindControls() {
+  void _bindControls()
+  {
     _canvas.on.click.add(_canvasClicked);
     document.on.pointerLockChange.add(_pointerLockChange);
     document.on.keyDown.add(_keyDownHandler);
     document.on.keyUp.add(_keyUpHandler);
     document.on.mouseMove.add(_mouseMoveHandler);
-  }
-
-  /**
-   * Setup the camera transform
-   */
-  void _updateCameraTransform() {
-    mat4 viewProjectionMatrix = _camera.projectionMatrix;
-    mat4 viewMatrix = _camera.lookAtMatrix;
-    viewProjectionMatrix.multiply(viewMatrix);
-    // Copy into
-    viewProjectionMatrix.copyIntoArray(_viewProjectitonMatrixArray);
   }
 
   /**
@@ -349,14 +361,16 @@ class Game
     // The camera is pointed at the origin.
     _camera.focusPosition = new vec3.raw(0.0, 0.0, 0.0);
 
-    _viewProjectitonMatrixArray = new Float32Array(16);
-    _updateCameraTransform();
-
     // Create the model matrix
     // Center it at 0.0, 0.0, 0.0
     _modelMatrix = new mat4.identity();
-
     _modelMatrixArray = new Float32Array(16);
+
+    // Create the camera's matrices
+    _modelViewMatrixArray = new Float32Array(16);
+    _modelViewProjectionMatrixArray = new Float32Array(16);
+    _projectionMatrixArray = new Float32Array(16);
+    _normalMatrixArray = new Float32Array(16);
   }
 
   /**
@@ -365,6 +379,7 @@ class Game
   void _createShaders()
   {
     _shaderUniforms = new Map<String, String>();
+    _shaderUniformValues = new Map<String, Map<String, dynamic>>();
 
     // Create the fallback shader program
     _fallbackShaderProgram = _graphicsDevice.createShaderProgram('Fallback Program', {});
@@ -495,15 +510,26 @@ class Game
 
     // Update the camera
     _cameraController.UpdateCamera(dt, _camera);
-    _updateCameraTransform();
 
     // Rotate the model
     double angle = dt * Math.PI;
 
     mat4 rotation = new mat4.rotationX(angle);
     _modelMatrix.multiply(rotation);
-
     _modelMatrix.copyIntoArray(_modelMatrixArray);
+
+    // Compute the builtin uniforms
+    mat4 modelView = _camera.lookAtMatrix * _modelMatrix;
+    modelView.copyIntoArray(_modelViewMatrixArray);
+
+    mat4 projection = _camera.projectionMatrix;
+    projection.copyIntoArray(_projectionMatrixArray);
+
+    mat4 modelViewProjection = projection * modelView;
+    modelViewProjection.copyIntoArray(_modelViewProjectionMatrixArray);
+
+    _camera.copyProjectionMatrixIntoArray(_projectionMatrixArray);
+    _camera.copyNormalMatrixIntoArray(_normalMatrixArray);
 
     for (int i = 0; i < 3; ++i)
     {
@@ -552,8 +578,14 @@ class Game
 
     // Set the shader program
     _context.setShaderProgram(_shaderProgram);
-    _context.setUniformMatrix4('objectTransform', _modelMatrixArray);
-    _context.setUniformMatrix4('cameraTransform', _viewProjectitonMatrixArray);
+
+    // Set the built-in uniforms
+    _context.setUniformNum('time', _lastFrameTime);
+    _context.setUniformMatrix4('uModelMatrix', _modelMatrixArray);
+    _context.setUniformMatrix4('uModelViewMatrix', _modelViewMatrixArray);
+    _context.setUniformMatrix4('uModelViewProjectionMatrix', _modelViewProjectionMatrixArray);
+    _context.setUniformMatrix4('uProjectionMatrix', _projectionMatrixArray);
+    _context.setUniformMatrix4('uNormalMatrix', _normalMatrixArray);
 
     // Set the texture
     _context.setTextures(0, _textures);
