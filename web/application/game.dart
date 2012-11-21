@@ -587,6 +587,9 @@ class Game
     _context.setUniformMatrix4('uProjectionMatrix', _projectionMatrixArray);
     _context.setUniformMatrix4('uNormalMatrix', _normalMatrixArray);
 
+    // Set user defined uniforms
+    _setUniformValues();
+
     // Set the texture
     _context.setTextures(0, _textures);
     _context.setSamplers(0, _samplerStates);
@@ -599,6 +602,68 @@ class Game
     // Draw the mesh
     _context.setPrimitiveTopology(GraphicsContext.PrimitiveTopologyTriangles);
     _context.drawIndexed(_meshIndexCount, 0);
+  }
+
+  /**
+   * Applies the user defined uniforms.
+   */
+  void _setUniformValues()
+  {
+    _shaderUniformValues.forEach((name, uniform) {
+      String type = uniform['type'];
+      dynamic value = uniform['value'];
+
+      switch (type)
+      {
+        case UniformType.Sampler2dName:
+        case UniformType.SamplerCubeName:
+        case UniformType.IntegerName:
+          _context.setUniformInt(name, value);
+        break;
+        case UniformType.FloatName:
+          _context.setUniformNum(name, value);
+        break;
+        case UniformType.Vector2fName:
+          _context.setUniformVector2(name, value);
+        break;
+        case UniformType.Vector3fName:
+          _context.setUniformVector3(name, value);
+        break;
+        case UniformType.Vector4fName:
+          _context.setUniformVector4(name, value);
+        break;
+        case UniformType.Matrix2x2fName:
+          assert(false); // Not yet supported
+        break;
+        case UniformType.Matrix3x3fName:
+          _context.setUniformMatrix3(name, value);
+        break;
+        case UniformType.Matrix4x4fName:
+          _context.setUniformMatrix4(name, value);
+        break;
+        case UniformType.Vector2iName:
+          assert(false); // Not yet supported
+        break;
+        case UniformType.Vector3iName:
+          assert(false); // Not yet supported
+        break;
+        case UniformType.Vector4iName:
+          assert(false); // Not yet supported
+        break;
+        case UniformType.BooleanName:
+          assert(false); // Not yet supported
+        break;
+        case UniformType.Vector2bName:
+          assert(false); // Not yet supported
+        break;
+        case UniformType.Vector3bName:
+          assert(false); // Not yet supported
+        break;
+        case UniformType.Vector4bName:
+          assert(false); // Not yet supported
+        break;
+      }
+    });
   }
 
   //---------------------------------------------------------------------
@@ -726,6 +791,14 @@ class Game
   Map<String, String> get uniforms => _shaderUniforms;
 
   /**
+   * Sets the uniform values for the program.
+   */
+  set uniformValues(Map<String, Map<String, dynamic>> values)
+  {
+    _shaderUniformValues = values;
+  }
+
+  /**
    * Reconfigure the vertex shader for the rendering.
    */
   void setVertexSource(String source)
@@ -777,10 +850,8 @@ class Game
    */
   void _getShaderUniforms(String name, int index, String type, int size, WebGLUniformLocation location)
   {
-    print('Name: $name');
-    print('Type: $type');
+    _shaderUniforms[name] = type;
   }
-
 
   //---------------------------------------------------------------------
   // Static methods

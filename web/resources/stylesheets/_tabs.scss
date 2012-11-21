@@ -258,7 +258,10 @@ textarea {
   height: $compiler_message_height;
 }
 
-.compiler_output {
+.compiler_output
+{
+  width: 100%;
+
   tr:nth-child(even)
   {
     background: $background_color;

@@ -19,12 +19,14 @@ part 'client/messages.dart';
 part 'application/frame_counter.dart';
 part 'application/game.dart';
 part 'application/shader_defaults.dart';
+part 'ui/compile_log.dart';
 part 'ui/element_names.dart';
 part 'ui/model_selection.dart';
 part 'ui/new_file.dart';
+part 'ui/renderer_selection.dart';
+part 'ui/source_editor.dart';
 part 'ui/tabbed_element.dart';
 part 'ui/texture_selection.dart';
-part 'ui/renderer_selection.dart';
 part 'ui/uniform_selection.dart';
 part 'workspace/application_file_system.dart';
 part 'workspace/workspace.dart';
@@ -55,10 +57,16 @@ class Viewer
   ModelSelection _modelSelection;
   /// UI for the textures tab.
   TextureSelection _textureSelection;
+  /// Source code editor for the vertex shader.
+  SourceEditor _vertexShaderEditor;
+  /// Source code editor for the fragment shader.
+  SourceEditor _fragmentShaderEditor;
   /// UI for the uniforms tab.
   UniformSelection _uniformSelection;
   /// UI for the renderer tab.
   RendererSelection _rendererSelection;
+  /// The [CompileLog] for the shader program.
+  CompileLog _compileLog;
 
   //---------------------------------------------------------------------
   // Construction
@@ -80,14 +88,30 @@ class Viewer
     _textureSelection = new TextureSelection();
     _textureSelection.textureCallback = _onTextureChanged;
 
+    // Attach to the vertex shader editor
+    _vertexShaderEditor = new SourceEditor('#vertex_shader_source');
+    _vertexShaderEditor.sourceCallback = _onVertexShaderChanged;
+
+    // Attach to the fragment shader editor
+    _fragmentShaderEditor = new SourceEditor('#fragment_shader_source');
+    _fragmentShaderEditor.sourceCallback = _onFragmentShaderChanged;
+
     // Attach to the uniform UI
     _uniformSelection = new UniformSelection();
+    _uniformSelection.changeCallback = _onUniformsChanged;
 
     // Attach to the renderer UI
     _rendererSelection = new RendererSelection();
     _rendererSelection.blendStateCallback = _onBlendStateChanged;
     _rendererSelection.depthStateCallback = _onDepthStateChanged;
     _rendererSelection.rasterizerStateCallback = _onRasterizerStateChanged;
+
+    // Attach to the compile log
+    TabbedElement element = new TabbedElement();
+    element.addTab('#error_tab', '#error_list');
+    element.addTab('#warning_tab', '#warning_list');
+
+    _compileLog = new CompileLog();
 
     _setupMenuBar();
     _setupUITab();
@@ -138,6 +162,16 @@ class Viewer
     });
 
     loadFile(_newFileState);
+
+    // Set the shader program
+    _vertexShaderEditor.source = _defaultVertexSource;
+    _fragmentShaderEditor.source = _defaultFragmentSource;
+
+    Game game = Game.instance;
+    game.setVertexSource(_defaultVertexSource);
+    game.setFragmentSource(_defaultFragmentSource);
+
+    _onShaderProgramChanged();
   }
 
   /**
@@ -228,6 +262,56 @@ class Viewer
   }
 
   /**
+   * Callback for when the vertex shader is modified.
+   */
+  void _onVertexShaderChanged(String value)
+  {
+    Game.instance.setVertexSource(value);
+
+    _onShaderProgramChanged();
+  }
+
+  /**
+   * Callback for when the fragment shader is modified.
+   */
+  void _onFragmentShaderChanged(String value)
+  {
+    Game.instance.setFragmentSource(value);
+
+    _onShaderProgramChanged();
+  }
+
+  /**
+   * Callback for when the shader program is modified.
+   */
+  void _onShaderProgramChanged()
+  {
+    Game game = Game.instance;
+    _compileLog.clear();
+
+    if (game.isProgramValid)
+    {
+      // Update the shader uniforms
+      _uniformSelection.uniformTypes = Game.instance.uniforms;
+    }
+    else
+    {
+      // Update the compile log
+      _compileLog.addToLog('Vertex', game.vertexShaderLog);
+      _compileLog.addToLog('Fragment', game.fragmentShaderLog);
+    }
+  }
+
+  /**
+   * Callback for when the uniforms are changed.
+   */
+  void _onUniformsChanged(Map<String, Map<String, dynamic>> values)
+  {
+    print('uniforms changed');
+    Game.instance.uniformValues = values;
+  }
+
+  /**
    * Callback when the rasterizer state is changed.
    */
   void _onRasterizerStateChanged(String properties)
@@ -281,8 +365,6 @@ void main()
 
   Game.instance.setVertexSource(_defaultVertexSource);
   Game.instance.setFragmentSource(_defaultFragmentSource);
-
-
 
   window.requestAnimationFrame(_onUpdate);
 }

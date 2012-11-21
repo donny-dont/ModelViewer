@@ -256,8 +256,10 @@ textarea {
   overflow-y: scroll;
   height: 162px; }
 
-.compiler_output tr:nth-child(even) {
-  background: #f8f8f8; }
+.compiler_output {
+  width: 100%; }
+  .compiler_output tr:nth-child(even) {
+    background: #f8f8f8; }
 
 #compiler_status {
   border-style: solid;
