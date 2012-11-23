@@ -10,6 +10,7 @@
     <div id='menu_bar'>
       <div id='menu_item_wrapper'>
         <div id='new_file_button' class='menu_item'></div>
+        <div id='load_file_button' class='menu_item'></div>
         <div id='save_file_button' class='menu_item'></div>
         <div id='save_as_file_button' class='menu_item'></div>
         <div id='fullscreen_button' class='menu_item'></div>
@@ -345,13 +346,25 @@
       </div>
     </div>
 
+    <!-- Modal dialog for loading -->
+    <div id='load_dialog' class='modal_dialog modal_dialog_closed'>
+      <div>
+        <h1>Load Workspace</h1>
+        <table></table>
+        <div class='dialog_buttons'>
+          <div id='load_submit' class='submit_button'>Load</div>
+          <div id='load_cancel' class='cancel_button'>Cancel</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal dialog for saving -->
-    <div id='save_as_dialog' class='modal_dialog modal_dialog_opened'>
+    <div id='save_as_dialog' class='modal_dialog modal_dialog_closed'>
       <div>
         <h1>Save Workspace</h1>
         <div>Name:</div>
         <input type='text' />
-        <div id='dialog_buttons'>
+        <div class='dialog_buttons'>
           <div id='save_submit' class='submit_button'>Save</div>
           <div id='save_cancel' class='cancel_button'>Cancel</div>
         </div>

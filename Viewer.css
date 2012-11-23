@@ -45,6 +45,10 @@ $canvas_height: 600px;
   background-repeat: no-repeat;
   background: url(web/resources/images/new.png); }
 
+#load_file_button {
+  background-repeat: no-repeat;
+  background: url(web/resources/images/load.png); }
+
 #save_file_button {
   background-repeat: no-repeat;
   background: url(web/resources/images/save.png); }
@@ -332,6 +336,26 @@ textarea {
   #about_dialog > div a {
     text-decoration: none; }
 
+#load_dialog > div {
+  width: 450px; }
+  #load_dialog > div table {
+    width: 100%;
+    border-collapse: collapse; }
+  #load_dialog > div tr {
+    border: 1px inset transparent;
+    cursor: pointer;
+    line-height: 30px; }
+  #load_dialog > div tr:hover {
+    border: 1px solid #239bd7 !important; }
+  #load_dialog > div tr:nth-child(odd) {
+    background: white; }
+  #load_dialog > div tr:nth-child(even) {
+    background: #f8f8f8; }
+
+.file_selected {
+  border: 1px solid #70B2D3 !important;
+  background: #70B2D3 !important; }
+
 #save_as_dialog > div {
   width: 450px; }
   #save_as_dialog > div input {
@@ -342,8 +366,8 @@ textarea {
   margin: 0px auto; }
 
 .dialog_buttons {
-  padding: 10px;
-  border-top: 1px solid black; }
+  padding-top: 10px;
+  text-align: right; }
 
 .submit_button {
   display: inline-block;

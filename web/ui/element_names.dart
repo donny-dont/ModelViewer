@@ -13,8 +13,12 @@ class _ElementNames
 
   /// The ID of the new button.
   static const String newFileButtonName = '#new_file_button';
+  /// The ID of the load button.
+  static const String loadFileButtonName = '#load_file_button';
   /// The ID of the save button.
   static const String saveFileButtonName = '#save_file_button';
+  /// The ID of the save as button.
+  static const String saveAsFileButtonName = '#save_as_file_button';
   /// The ID of the fullscreen button.
   static const String fullscreenButtonName = '#fullscreen_button';
   /// The ID of the about dialog.

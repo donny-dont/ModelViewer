@@ -34,6 +34,7 @@
 }
 
 #new_file_button     { @include no_repeat; background: url(web/resources/images/new.png); }
+#load_file_button    { @include no_repeat; background: url(web/resources/images/load.png); }
 #save_file_button    { @include no_repeat; background: url(web/resources/images/save.png); }
 #save_as_file_button { @include no_repeat; background: url(web/resources/images/save_as.png); }
 #fullscreen_button   { @include no_repeat; background: url(web/resources/images/fullscreen.png); }

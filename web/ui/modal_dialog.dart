@@ -78,18 +78,109 @@ class SimpleModalDialog extends ModalDialog
 }
 
 /**
+ * A [ModalDialog] for interacting with the filesystem.
+ */
+class FileSystemDialog extends ModalDialog
+{
+  /// The class for file selection.
+  static const String _fileSelectedClass = 'file_selected';
+
+  /// The file system for the application.
+  ApplicationFileSystem _fileSystem;
+  /// The rows containing the file information.
+  List<TableRowElement> _files;
+
+  /**
+   * Creates an instance of the [LoadDialog] class.
+   */
+  FileSystemDialog(String id, ApplicationFileSystem fileSystem)
+    : super(id)
+  {
+    _files = new List<TableRowElement>();
+
+    DivElement submit = query(_ElementNames.submitButtonClassName);
+    submit.on.click.add(_onSubmit);
+
+    DivElement cancel = query(_ElementNames.cancelButtonClassName);
+    cancel.on.click.add(_onHide);
+  }
+
+  /**
+   * Shows the modal dialog.
+   */
+  void show()
+  {
+    super.show();
+
+    _createFileList();
+  }
+
+  /**
+   * Creates a list of all the workspaces currently available.
+   *
+   * Will ignore the current workspace unless specified.
+   */
+  void _createFileList([bool ignoreCurrent = true])
+  {
+    TableElement table = _element.query('table');
+    table.nodes.clear();
+
+    int length = 3;
+
+    for (int i = 0; i < length; ++i)
+    {
+      TableCellElement cell;
+      TableRowElement row = new TableRowElement();
+      table.nodes.add(row);
+      _files.add(row);
+
+      row.on.click.add((_) {
+        _selectFile(i);
+      });
+
+      cell = new TableCellElement();
+      cell.innerHTML = 'Testing';
+      row.nodes.add(cell);
+
+      cell = new TableCellElement();
+      cell.innerHTML = 'Dec 23rd';
+      row.nodes.add(cell);
+    }
+  }
+
+  void _selectFile(int index)
+  {
+    int length = _files.length;
+
+    for (int i = 0; i < length; ++i)
+    {
+      TableRowElement row = _files[i];
+
+      if (index == i)
+      {
+        row.classes.add(_fileSelectedClass);
+      }
+      else
+      {
+        row.classes.remove(_fileSelectedClass);
+      }
+    }
+
+  }
+
+  void _onSubmit(_) { }
+}
+
+/**
  * A [ModalDialog] for loading files.
  */
-class LoadDialog extends ModalDialog
+class LoadDialog extends FileSystemDialog
 {
   /**
    * Creates an instance of the [LoadDialog] class.
    */
-  LoadDialog(String id)
-    : super(id)
-  {
-
-  }
+  LoadDialog(String id, ApplicationFileSystem fileSystem)
+    : super(id, fileSystem);
 }
 
 /**

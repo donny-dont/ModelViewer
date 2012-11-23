@@ -47,6 +47,44 @@
   a { text-decoration: none; }
 }
 
+#load_dialog > div
+{
+  width: $load_dialog_width;
+
+  table
+  {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  tr
+  {
+    border: 1px inset transparent;
+    cursor: pointer;
+    line-height: 30px;
+  }
+
+  tr:hover
+  {
+    border: 1px solid $selected_color !important;
+  }
+
+  tr:nth-child(odd)
+  {
+    background: $tab_background_color;
+  }
+  tr:nth-child(even)
+  {
+    background: $background_color;
+  }
+}
+
+.file_selected
+{
+  border: 1px solid #70B2D3 !important;
+  background: #70B2D3 !important;
+}
+
 #save_as_dialog > div
 {
   width: $save_as_dialog_width;
@@ -62,9 +100,8 @@
 
 .dialog_buttons
 {
-  padding:10px;
-
-  border-top: 1px solid black;
+  padding-top: 10px;
+  text-align: right;
 }
 
 @mixin dialog_button

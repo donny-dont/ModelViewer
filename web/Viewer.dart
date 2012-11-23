@@ -51,7 +51,7 @@ class Viewer
   //---------------------------------------------------------------------
 
   /// The [ApplicationFilesystem].
-  ApplicationFileSystem _applicationFileSystem;
+  ApplicationFileSystem _fileSystem;
   /// The current [Workspace].
   Workspace _currentWorkspace;
   /// UI for the model tab.
@@ -94,7 +94,7 @@ class Viewer
     // Create the filesystem
     // Do this last as there is a callback involved for the
     // filesystem that will modify the UI.
-    _applicationFileSystem = new ApplicationFileSystem(_onFileSystemReady);
+    _fileSystem = new ApplicationFileSystem(_onFileSystemReady);
   }
 
   /**
@@ -148,6 +148,11 @@ class Viewer
       newFile();
     });
 
+    DivElement loadFileButton = query(_ElementNames.loadFileButtonName);
+    loadFileButton.on.click.add((_) {
+      _loadDialog.show();
+    });
+
     DivElement saveFileButton = query(_ElementNames.saveFileButtonName);
     saveFileButton.on.click.add((_) {
       saveFile();
@@ -183,7 +188,7 @@ class Viewer
 
     _saveDialog = new SaveDialog(_ElementNames.saveDialogName);
 
-    _loadDialog = new LoadDialog(_ElementNames.loadDialogName);
+    _loadDialog = new LoadDialog(_ElementNames.loadDialogName, _fileSystem);
   }
 
   //---------------------------------------------------------------------
@@ -195,7 +200,7 @@ class Viewer
    */
   void newFile()
   {
-    _applicationFileSystem.createWorkspace().then((workspace) {
+    _fileSystem.createWorkspace().then((workspace) {
       print('workspace created');
       _currentWorkspace = workspace;
     });
