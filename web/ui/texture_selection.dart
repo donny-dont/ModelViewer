@@ -109,6 +109,10 @@ class TextureUnit
       textureDropArea.classes.remove('drag_over');
       textureDropArea.classes.add('drag_none');
     });
+    textureArea.on.dragOver.add((e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
     textureArea.on.drop.add((e) {
       e.stopPropagation();
       e.preventDefault();

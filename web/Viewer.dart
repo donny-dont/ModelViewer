@@ -296,7 +296,12 @@ class Viewer
    */
   void _onModelLoaded(File file)
   {
+    _currentWorkspace.saveModel(file).then((value) {
+      print('Model changed $value');
 
+      // Display the new model
+      Game.instance.mesh = value;
+    });
   }
 
   /**
@@ -306,9 +311,9 @@ class Viewer
   {
     _currentWorkspace.saveTexture(file, textureUnit).then((value) {
       print('Texture changed $value');
+
       // Display the new texture
       _textureSelection.textureUnits[textureUnit].texture = value;
-
       Game.instance.setTextureAt(textureUnit, value);
     });
   }

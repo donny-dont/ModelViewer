@@ -20,6 +20,19 @@ class Workspace
   }
 
   /**
+   * Saves a model to the file system.
+   */
+  Future<String> saveModel(File file)
+  {
+    String filename = 'model.mesh';
+    Completer completer = new Completer();
+
+    _writeFile(completer, filename, file);
+
+    return completer.future;
+  }
+
+  /**
    * Saves a [Texture] to the file system.
    */
   Future<String> saveTexture(File file, int textureUnit)

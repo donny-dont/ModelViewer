@@ -103,6 +103,11 @@ class ModelSelection
       modelDropArea.classes.add('drag_none');
     });
 
+    modelDropArea.on.dragOver.add((e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
     modelDropArea.on.drop.add((e) {
       e.stopPropagation();
       e.preventDefault();
