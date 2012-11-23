@@ -10,7 +10,7 @@ attribute vec3 vPosition;
 attribute vec2 vTexCoord;
 
 // Uniform variables
-uniform float time;
+uniform float uTime;
 uniform mat4 uModelMatrix;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uModelViewProjectionMatrix;

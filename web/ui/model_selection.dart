@@ -16,6 +16,8 @@ class ModelSelection
 
   /// Text to display when hovering over the drop area.
   static const String _dropText = 'Drag and Drop a Model to Change';
+  /// Class to use when the model is selected.
+  static const String _modelSelectedClass = 'model_selected';
 
   //---------------------------------------------------------------------
   // Member variables
@@ -25,6 +27,8 @@ class ModelSelection
   ModelChangedEvent modelChangedCallback;
   /// Callback for when a model is loaded.
   ModelLoadedEvent modelLoadedCallback;
+  /// Model selection.
+  List<DivElement> _modelElements;
 
   //---------------------------------------------------------------------
   // Construction
@@ -44,26 +48,35 @@ class ModelSelection
    */
   void _setupStandardModels()
   {
+    _modelElements = new List<DivElement>();
+
     DivElement cubeMesh = query('#cube_button') as DivElement;
     cubeMesh.on.click.add((_) {
-      _onModelChanged('web/resources/meshes/cube.mesh');
+      _onModelChanged('web/resources/meshes/cube.mesh', 0);
     });
+
+    _modelElements.add(cubeMesh);
 
     DivElement sphereMesh = query('#sphere_button');
     sphereMesh.on.click.add((_) {
-      _onModelChanged('web/resources/meshes/sphere.mesh');
+      _onModelChanged('web/resources/meshes/sphere.mesh', 1);
     });
+
+    _modelElements.add(sphereMesh);
 
     DivElement planeMesh = document.query('#plane_button');
     planeMesh.on.click.add((_) {
-      _onModelChanged('web/resources/meshes/plane.mesh');
+      _onModelChanged('web/resources/meshes/plane.mesh', 2);
     });
+
+    _modelElements.add(planeMesh);
 
     DivElement cylinderMesh = query('#cylinder_button');
     cylinderMesh.on.click.add((_) {
-      _onModelChanged('web/resources/meshes/cylinder.mesh');
+      _onModelChanged('web/resources/meshes/cylinder.mesh', 3);
     });
 
+    _modelElements.add(cylinderMesh);
   }
 
   /**
@@ -109,16 +122,45 @@ class ModelSelection
   }
 
   //---------------------------------------------------------------------
+  // Methods
+  //---------------------------------------------------------------------
+
+  /**
+   * Shows what model is currently selected.
+   */
+  void _showSelectedModel(int index)
+  {
+    // Show the current selection
+    int length = _modelElements.length;
+
+    for (int i = 0; i < length; ++i)
+    {
+      DivElement element = _modelElements[i];
+
+      if (i == index)
+      {
+        element.classes.add(_modelSelectedClass);
+      }
+      else
+      {
+        element.classes.remove(_modelSelectedClass);
+      }
+    }
+  }
+
+  //---------------------------------------------------------------------
   // Events
   //---------------------------------------------------------------------
 
   /**
    * Callback for when one of the standard meshes are selected.
    */
-  void _onModelChanged(String url)
+  void _onModelChanged(String url, int index)
   {
     if (modelChangedCallback != null)
     {
+      _showSelectedModel(index);
+
       modelChangedCallback(url);
     }
   }
@@ -130,6 +172,9 @@ class ModelSelection
   {
     if (modelLoadedCallback != null)
     {
+      // Use a custom mesh so hide any selected models.
+      _showSelectedModel(-1);
+
       modelLoadedCallback(files[0]);
     }
   }

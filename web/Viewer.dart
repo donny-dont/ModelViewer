@@ -21,6 +21,7 @@ part 'application/game.dart';
 part 'application/shader_defaults.dart';
 part 'ui/compile_log.dart';
 part 'ui/element_names.dart';
+part 'ui/modal_dialog.dart';
 part 'ui/model_selection.dart';
 part 'ui/new_file.dart';
 part 'ui/renderer_selection.dart';
@@ -67,6 +68,14 @@ class Viewer
   RendererSelection _rendererSelection;
   /// The [CompileLog] for the shader program.
   CompileLog _compileLog;
+  /// The [ModalDialog] for the filesystem dialog.
+  ModalDialog _fileSystemDialog;
+  /// The [ModalDialog] for the save dialog.
+  SaveDialog _saveDialog;
+  /// The [ModalDialog] for the loading dialog.
+  LoadDialog _loadDialog;
+  /// The [ModalDialog] for the about dialog.
+  SimpleModalDialog _aboutDialog;
 
   //---------------------------------------------------------------------
   // Construction
@@ -77,8 +86,22 @@ class Viewer
    */
   Viewer()
   {
-    _applicationFileSystem = new ApplicationFileSystem();
+    _setupDialogs();
+    _setupMenuBar();
+    _setupUI();
+    _setupUITab();
 
+    // Create the filesystem
+    // Do this last as there is a callback involved for the
+    // filesystem that will modify the UI.
+    _applicationFileSystem = new ApplicationFileSystem(_onFileSystemReady);
+  }
+
+  /**
+   * Initialzies the UI elements.
+   */
+  void _setupUI()
+  {
     // Attach to the model UI
     _modelSelection = new ModelSelection();
     _modelSelection.modelChangedCallback = _onModelChanged;
@@ -87,6 +110,7 @@ class Viewer
     // Attach to the texture UI
     _textureSelection = new TextureSelection();
     _textureSelection.textureCallback = _onTextureChanged;
+    _textureSelection.samplerStateCallback = _onSamplerStateChanged;
 
     // Attach to the vertex shader editor
     _vertexShaderEditor = new SourceEditor('#vertex_shader_source');
@@ -112,9 +136,6 @@ class Viewer
     element.addTab('#warning_tab', '#warning_list');
 
     _compileLog = new CompileLog();
-
-    _setupMenuBar();
-    _setupUITab();
   }
 
   /**
@@ -131,6 +152,11 @@ class Viewer
     saveFileButton.on.click.add((_) {
       saveFile();
     });
+
+    DivElement aboutButton = query(_ElementNames.aboutButtonName);
+    aboutButton.on.click.add((_) {
+      _aboutDialog.show();
+    });
   }
 
   /**
@@ -145,6 +171,19 @@ class Viewer
     element.addTab(_ElementNames.fragmentShaderTabName, _ElementNames.fragmentShaderAreaName);
     element.addTab(_ElementNames.uniformTabName, _ElementNames.uniformAreaName);
     element.addTab(_ElementNames.rendererTabName, _ElementNames.rendererAreaName);
+  }
+
+  /**
+   * Initializes the dialogs.
+   */
+  void _setupDialogs()
+  {
+    _fileSystemDialog = new ModalDialog(_ElementNames.filesystemDialogName);
+    _aboutDialog = new SimpleModalDialog(_ElementNames.aboutDialogName);
+
+    _saveDialog = new SaveDialog(_ElementNames.saveDialogName);
+
+    _loadDialog = new LoadDialog(_ElementNames.loadDialogName);
   }
 
   //---------------------------------------------------------------------
@@ -232,6 +271,14 @@ class Viewer
   //---------------------------------------------------------------------
 
   /**
+   * Callback for when the filesystem is ready.
+   */
+  void _onFileSystemReady()
+  {
+    _fileSystemDialog.hide();
+  }
+
+  /**
    * Callback for when a model is changed.
    */
   void _onModelChanged(String url)
@@ -259,6 +306,14 @@ class Viewer
 
       Game.instance.setTextureAt(textureUnit, value);
     });
+  }
+
+  /**
+   * Calback for when a [SamplerState] is changed.
+   */
+  void _onSamplerStateChanged(String values, int textureUnit)
+  {
+    Game.instance.setSamplerStateAt(textureUnit, values);
   }
 
   /**

@@ -11,8 +11,10 @@
       <div id='menu_item_wrapper'>
         <div id='new_file_button' class='menu_item'></div>
         <div id='save_file_button' class='menu_item'></div>
+        <div id='save_as_file_button' class='menu_item'></div>
+        <div id='fullscreen_button' class='menu_item'></div>
       </div>
-      <div id='status'></div>
+      <div id='about_button' class='menu_item'></div>
     </div>
     <div id='page'>
       <div id='page_right'>
@@ -34,18 +36,10 @@
               <div class='ui_row first'>
                 <h2>Standard Models</h2>
                 <div class='centered'>
-                  <div id='cube_button' class='model_button'>
-                    <img src='web/resources/images/cube.png' alt='Cube' />
-                  </div>
-                  <div id='sphere_button' class='model_button'>
-                    <img src='web/resources/images/sphere.png' alt='Sphere' />
-                  </div>
-                  <div id='plane_button' class='model_button'>
-                    <img src='web/resources/images/plane.png' alt='Plane' />
-                  </div>
-                  <div id='cylinder_button' class='model_button'>
-                    <img src='web/resources/images/cylinder.png' alt='Cylinder' />
-                  </div>
+                  <div id='cube_button' class='model_button'></div>
+                  <div id='sphere_button' class='model_button'></div>
+                  <div id='plane_button' class='model_button'></div>
+                  <div id='cylinder_button' class='model_button'></div>
                 </div>
               </div>
               <div class='ui_row second'>
@@ -337,6 +331,70 @@
             0 errors 0 warnings
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Modal dialog for file system -->
+    <div id='filesystem_access_dialog' class='modal_dialog modal_dialog_opened'>
+      <div>
+        <h1>Filesystem Access</h1>
+        <p>This application requires access to the filesystem to function properly. Without it you cannot save your work, nor can you add textures or models.</p>
+        <h2>Enabling</h2>
+        <p>Please click on the accept button as shown in the image below to begin using the application.</p>
+        <img src='web/resources/images/enable_filsystem.png' />
+      </div>
+    </div>
+
+    <!-- Modal dialog for saving -->
+    <div id='save_as_dialog' class='modal_dialog modal_dialog_opened'>
+      <div>
+        <h1>Save Workspace</h1>
+        <div>Name:</div>
+        <input type='text' />
+        <div id='dialog_buttons'>
+          <div id='save_submit' class='submit_button'>Save</div>
+          <div id='save_cancel' class='cancel_button'>Cancel</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal dialog for loading -->
+    <div id='loading_dialog' class='modal_dialog modal_dialog_closed'>
+      <div>
+        <h1>Load Workspace</h1>
+      </div>
+    </div>
+
+    <!-- Modal dialog for about information -->
+    <div id='about_dialog' class='modal_dialog modal_dialog_closed'>
+      <div>
+        <h1>About Model Viewer</h1>
+        <p class='centered'>Copyright 2012, Don Olmstead</p>
+        <p class='centered'>All Rights Reserved.</p>
+        <br />
+        <p class='centered'>
+          <a href='http://donolmstead.me' target='_blank'>
+            <img src='web/resources/images/wordpress.png' />
+          </a>
+          <a href='https://twitter.com/don_olmstead' target='_blank'>
+            <img src='web/resources/images/twitter.png' />
+          </a>
+          <a href='https://plus.google.com/u/0/113371030751322342143/posts' target='_blank'>
+            <img src='web/resources/images/gplus.png' />
+          </a>
+          <a href='http://www.linkedin.com/in/donolmstead' target='_blank'>
+            <img src='web/resources/images/linkedin.png' />
+          </a>
+        </p>
+        <br />
+        <h2>Graphics By</h2>
+        <a href='https://github.com/johnmccutchan/spectre' target='_blank'>
+          <p>Spectre</p>
+        </a>
+        <h2>Written In</h2>
+        <a href='http://www.dartlang.org/' target='_blank'>
+          <img class='logo' src='web/resources/images/dart.png' />
+        </a>
       </div>
     </div>
 

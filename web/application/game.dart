@@ -16,6 +16,10 @@ class Game
   static const int _keyCodeS = 83;
   /// Move camera forward.
   static const int _keyCodeW = 87;
+  /// Rotate camera to the right.
+  static const int _keyCodeQ = 81;
+  /// Rotate camera to the left.
+  static const int _keyCodeE = 69;
   /**
    * The maximum number of textures WebGL supports
    *
@@ -49,7 +53,11 @@ class Game
   // Animation variables
   //---------------------------------------------------------------------
 
+  /// Whether the clear color should animate
+  bool _animateClearColor;
   /// Clear color for the rendering.
+  vec3 _clearColor;
+  /// Computed clear color for the rendering.
   vec3 _color;
   /// Direction to modify the color.
   vec3 _direction;
@@ -229,6 +237,8 @@ class Game
     _viewport = _graphicsDevice.createViewport('view', viewportProperties);
 
     // Setup the clear color
+    _animateClearColor = false;
+    _clearColor = new vec3(0.0, 0.0, 0.0);
     _color = new vec3(0.0, 0.0, 0.0);
     _direction = new vec3(1.0, 1.0, 1.0);
     _randomGenerator = new Math.Random();
@@ -390,12 +400,12 @@ class Game
     int fallbackFragmentShader = _graphicsDevice.createFragmentShader('Fallback Fragment Shader', {});
     _context.compileShader(fallbackFragmentShader, _fallbackFragmentShader);
 
-    Map fallbackShaderProps = {
+    Map fallbackShaderValues = {
       'VertexProgram': fallbackVertexShader,
       'FragmentProgram': fallbackFragmentShader
     } ;
 
-    _graphicsDevice.configureDeviceChild(_fallbackShaderProgram, fallbackShaderProps);
+    _graphicsDevice.configureDeviceChild(_fallbackShaderProgram, fallbackShaderValues);
 
     // Create the user defined shader program
     _userShaderProgram = _graphicsDevice.createShaderProgram('User Program', {});
@@ -403,12 +413,12 @@ class Game
     _vertexShader = _graphicsDevice.createVertexShader('User Vertex Shader', {});
     _fragmentShader = _graphicsDevice.createFragmentShader('User Fragment Shader', {});
 
-    Map userShaderProps = {
+    Map userShaderValues = {
       'VertexProgram': _vertexShader,
       'FragmentProgram': _fragmentShader
     } ;
 
-    _graphicsDevice.configureDeviceChild(_userShaderProgram, userShaderProps);
+    _graphicsDevice.configureDeviceChild(_userShaderProgram, userShaderValues);
 
     // By default use the fallback
     _shaderProgram = _fallbackShaderProgram;
@@ -512,7 +522,7 @@ class Game
     _cameraController.UpdateCamera(dt, _camera);
 
     // Rotate the model
-    double angle = dt * Math.PI;
+    double angle = 0.0;//dt * Math.PI;
 
     mat4 rotation = new mat4.rotationX(angle);
     _modelMatrix.multiply(rotation);
@@ -531,22 +541,26 @@ class Game
     _camera.copyProjectionMatrixIntoArray(_projectionMatrixArray);
     _camera.copyNormalMatrixIntoArray(_normalMatrixArray);
 
-    for (int i = 0; i < 3; ++i)
+    // Animate the clear color
+    if (_animateClearColor)
     {
-      // Add a random difference
-      _color[i] += _direction[i] * (_randomGenerator.nextDouble() * 0.01);
+      for (int i = 0; i < 3; ++i)
+      {
+        // Add a random difference
+        _color[i] += _direction[i] * (_randomGenerator.nextDouble() * 0.01);
 
-      // Colors range from [0, 1]
-      // Change direction when necessary
-      if (_color[i] > 1.0)
-      {
-        _color[i] = 1.0;
-        _direction[i] = -1.0;
-      }
-      else if (_color[i] < 0.0)
-      {
-        _color[i] = 0.0;
-        _direction[i] = 1.0;
+        // Colors range from [0, 1]
+        // Change direction when necessary
+        if (_color[i] > 1.0)
+        {
+          _color[i] = 1.0;
+          _direction[i] = -1.0;
+        }
+        else if (_color[i] < 0.0)
+        {
+          _color[i] = 0.0;
+          _direction[i] = 1.0;
+        }
       }
     }
   }
@@ -580,7 +594,7 @@ class Game
     _context.setShaderProgram(_shaderProgram);
 
     // Set the built-in uniforms
-    _context.setUniformNum('time', _lastFrameTime);
+    _context.setUniformNum('uTime', _lastFrameTime);
     _context.setUniformMatrix4('uModelMatrix', _modelMatrixArray);
     _context.setUniformMatrix4('uModelViewMatrix', _modelViewMatrixArray);
     _context.setUniformMatrix4('uModelViewProjectionMatrix', _modelViewProjectionMatrixArray);
@@ -685,6 +699,15 @@ class Game
     _resourceManager.addEventCallback(meshResource, ResourceEvents.TypeUpdate, (type, resource) {
       MeshResource mesh = resource;
 
+      // Get the bounds to set how quickly the camera moves
+      //List<double> bounds = mesh.meshData['bounds'];
+      //vec3 minBounds = new vec3.raw(bounds[0], bounds[1], bounds[2]);
+      //vec3 maxBounds = new vec3.raw(bounds[3], bounds[4], bounds[5]);
+
+      //print('Bounds');
+      //print(minBounds.toString());
+      //print(maxBounds.toString());
+
       // Get the description of the layout
       var elements = [
         InputLayoutHelper.inputElementDescriptionFromMesh(new InputLayoutDescription('vPosition', 0, 'POSITION' ), mesh),
@@ -722,27 +745,35 @@ class Game
   }
 
   /**
+   * Sets the sampler state to use on the mesh.
+   */
+  void setSamplerStateAt(int i, String values)
+  {
+    _graphicsDevice.configureDeviceChild(_samplerStates[i], values);
+  }
+
+  /**
    * Reconfigures the rasterizer state for the rendering.
    */
-  void setRasterizerStateProperties(String props)
+  void setRasterizerStateProperties(String values)
   {
-    _graphicsDevice.configureDeviceChild(_rasterizerState, props);
+    _graphicsDevice.configureDeviceChild(_rasterizerState, values);
   }
 
   /**
    * Reconfigures the depth state for the rendering.
    */
-  void setDepthStateProperties(String props)
+  void setDepthStateProperties(String values)
   {
-    _graphicsDevice.configureDeviceChild(_depthState, props);
+    _graphicsDevice.configureDeviceChild(_depthState, values);
   }
 
   /**
    * Reconfigures the blend state for the rendering.
    */
-  void setBlendStateProperties(String props)
+  void setBlendStateProperties(String values)
   {
-    _graphicsDevice.configureDeviceChild(_blendState, props);
+    _graphicsDevice.configureDeviceChild(_blendState, values);
   }
 
   /**

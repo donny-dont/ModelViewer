@@ -45,27 +45,6 @@
     width: $tab_border_width;
   }
 
-  h2
-  {
-    text-color:  $text_color;
-    font-weight: normal;
-    @include bottom_border($text_color, $tab_border_width);
-
-    margin:
-    {
-      left:   0px;
-      right:  0px;
-      top:    0px;
-      bottom: $ui_row_padding;
-    }
-    padding:
-    {
-      left:   0px;
-      right:  0px;
-      top:    0px;
-      bottom: 5px;
-    }
-  }
 
 	textarea
 	{
@@ -119,14 +98,32 @@ textarea {
 
 /* Model UI */
 
+#model_buttons
+{
+  width: 200px;
+}
+
 .model_button
 {
+  width: $model_button_size;
+  height: $model_button_size;
   display:inline-block;
-  border:dashed 1px black;
-  padding:2px 3px;
-  margin-left:5px;
+  border:dashed 2px black;
   border-radius:4px;
+  overflow: hidden;
+  cursor:   pointer;
 }
+
+.model_selected
+{
+  border:dashed 2px $selected_color;
+  background-position-x: $model_button_size * -1;
+}
+
+#cube_button     { @include no_repeat; background-image: url(web/resources/images/cube.png); }
+#sphere_button   { @include no_repeat; background-image: url(web/resources/images/sphere.png); }
+#plane_button    { @include no_repeat; background-image: url(web/resources/images/plane.png); }
+#cylinder_button { @include no_repeat; background-image: url(web/resources/images/cylinder.png); }
 
 #model_drop
 {

@@ -17,6 +17,8 @@ class _ElementNames
   static const String saveFileButtonName = '#save_file_button';
   /// The ID of the fullscreen button.
   static const String fullscreenButtonName = '#fullscreen_button';
+  /// The ID of the about dialog.
+  static const String aboutButtonName = '#about_button';
 
   //---------------------------------------------------------------------
   // UI area tabs
@@ -51,4 +53,22 @@ class _ElementNames
   static const String rendererTabName = '#renderer_tab';
   /// The ID of the body for the textures area.
   static const String rendererAreaName = '#renderer_area';
+
+  //---------------------------------------------------------------------
+  // UI dialogs
+  //---------------------------------------------------------------------
+
+  /// The ID of the modal dialog for the filesystem.
+  static const String filesystemDialogName = '#filesystem_access_dialog';
+  /// The ID of the modal dialog for the about box.
+  static const String aboutDialogName = '#about_dialog';
+  /// The ID of the modal dialog for file saving.
+  static const String saveDialogName = '#save_as_dialog';
+  /// The ID of the modal dialog for file loading.
+  static const String loadDialogName = '#load_dialog';
+
+  /// The class name of a submit button.
+  static const String submitButtonClassName = '.submit_button';
+  /// The class name of a cancel button.
+  static const String cancelButtonClassName = '.cancel_button';
 }

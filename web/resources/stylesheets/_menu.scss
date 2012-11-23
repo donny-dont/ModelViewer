@@ -33,8 +33,22 @@
   }
 }
 
-#new_file_button  { @include no_repeat; background: url(web/resources/images/new.png); }
-#save_file_button { @include no_repeat; background: url(web/resources/images/save.png); }
+#new_file_button     { @include no_repeat; background: url(web/resources/images/new.png); }
+#save_file_button    { @include no_repeat; background: url(web/resources/images/save.png); }
+#save_as_file_button { @include no_repeat; background: url(web/resources/images/save_as.png); }
+#fullscreen_button   { @include no_repeat; background: url(web/resources/images/fullscreen.png); }
+#about_button
+{
+  @include no_repeat;
+  float:      right;
+  background: url(web/resources/images/info.png) no-repeat;
+
+  margin:
+  {
+    top:   ($menu_bar_height - $menu_image_size) / 2;
+    right:  $margin_value;
+  }
+}
 
 #status
 {

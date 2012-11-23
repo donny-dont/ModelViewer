@@ -49,6 +49,21 @@ $canvas_height: 600px;
   background-repeat: no-repeat;
   background: url(web/resources/images/save.png); }
 
+#save_as_file_button {
+  background-repeat: no-repeat;
+  background: url(web/resources/images/save_as.png); }
+
+#fullscreen_button {
+  background-repeat: no-repeat;
+  background: url(web/resources/images/fullscreen.png); }
+
+#about_button {
+  background-repeat: no-repeat;
+  float: right;
+  background: url(web/resources/images/info.png) no-repeat;
+  margin-top: 4px;
+  margin-right: 10px; }
+
 #status {
   float: right;
   width: 24px;
@@ -102,23 +117,6 @@ $canvas_height: 600px;
   border-style: solid;
   border-color: #abadb3;
   border-width: 1px; }
-  #ui_contents h2 {
-    text-color: black;
-    font-weight: normal;
-    border-style: solid;
-    border-color: black;
-    border-left-width: 0px;
-    border-right-width: 0px;
-    border-top-width: 0px;
-    border-bottom-width: 1px;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
-    margin-bottom: 8px;
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-top: 0px;
-    padding-bottom: 5px; }
   #ui_contents textarea {
     font-family: "Lucida Console", Monaco, monospace;
     white-space: nowrap;
@@ -138,7 +136,7 @@ textarea {
   font-size: 12px; }
 
 .drag_over {
-  border-color: red; }
+  border-color: #239bd7; }
 
 .drag_none {
   border-color: #0f0f0f; }
@@ -166,12 +164,37 @@ textarea {
   min-width: 200px; }
 
 /* Model UI */
+#model_buttons {
+  width: 200px; }
+
 .model_button {
+  width: 48px;
+  height: 48px;
   display: inline-block;
-  border: dashed 1px black;
-  padding: 2px 3px;
-  margin-left: 5px;
-  border-radius: 4px; }
+  border: dashed 2px black;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer; }
+
+.model_selected {
+  border: dashed 2px #239bd7;
+  background-position-x: -48px; }
+
+#cube_button {
+  background-repeat: no-repeat;
+  background-image: url(web/resources/images/cube.png); }
+
+#sphere_button {
+  background-repeat: no-repeat;
+  background-image: url(web/resources/images/sphere.png); }
+
+#plane_button {
+  background-repeat: no-repeat;
+  background-image: url(web/resources/images/plane.png); }
+
+#cylinder_button {
+  background-repeat: no-repeat;
+  background-image: url(web/resources/images/cylinder.png); }
 
 #model_drop {
   width: 256px;
@@ -271,6 +294,84 @@ textarea {
   background: #e2e2e2;
   padding: 5px; }
 
+/* Dialogs.css */
+.modal_dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 99999;
+  transition: opacity 400ms ease-in;
+  -webkit-transition: opacity 400ms ease-in;
+  -moz-transition: opacity 400ms ease-in; }
+
+.modal_dialog_opened {
+  opacity: 1;
+  pointer-events: auto; }
+
+.modal_dialog_closed {
+  opacity: 0;
+  pointer-events: none; }
+
+.modal_dialog > div {
+  width: 600px;
+  position: relative;
+  padding: 10px;
+  margin: 10% auto;
+  background: #f8f8f8;
+  border-radius: 5px;
+  z-index: 100000;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.25); }
+  .modal_dialog > div p {
+    text-align: center; }
+
+#about_dialog > div {
+  width: 300px; }
+  #about_dialog > div a {
+    text-decoration: none; }
+
+#save_as_dialog > div {
+  width: 450px; }
+  #save_as_dialog > div input {
+    width: 100%; }
+
+.logo {
+  display: block;
+  margin: 0px auto; }
+
+.dialog_buttons {
+  padding: 10px;
+  border-top: 1px solid black; }
+
+.submit_button {
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  color: #F8F8F8;
+  background: #008FD2;
+  border: solid 1px #00A4E4; }
+
+.submit_button:hover {
+  background: #0073CC; }
+
+.cancel_button {
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  border: solid 1px black;
+  border-radius: 4px; }
+
+.cancel_button:hover {
+  background: #D8D8D8; }
+
 body {
   background-color: #f8f8f8;
   text-color: black;
@@ -295,7 +396,7 @@ body {
   height: 728px; }
 
 canvas {
-  background-color: red; }
+  background-color: black; }
 
 #page_right {
   float: left;
@@ -324,3 +425,38 @@ canvas {
   border-radius: 4px;
   width: 100px;
   height: 50px; }
+
+h1 {
+  text-color: black;
+  border-style: solid;
+  border-color: black;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 1px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 8px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 5px; }
+
+h2 {
+  text-color: black;
+  border-style: solid;
+  border-color: black;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 1px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 8px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 5px;
+  font-weight: normal; }

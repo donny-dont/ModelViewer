@@ -180,7 +180,7 @@ class UniformSelection
   static const String _texturesName = 'textures';
   /// Built-in uniforms
   static final Map<String, String> _builtinUniformNames = {
-    'time'                      : 'float',
+    'uTime'                     : 'float',
     'uModelMatrix'              : 'mat4',
     'uModelViewMatrix'          : 'mat4',
     'uModelViewProjectionMatrix': 'mat4',

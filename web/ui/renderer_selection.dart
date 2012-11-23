@@ -39,6 +39,8 @@ class RendererSelection
   static const String _blendStateWriteBlueId = '#write_blue_enabled';
   static const String _blendStateWriteAlphaId = '#write_alpha_enabled';
 
+  static const String _clearColorAnimationEnabledId = '#clear_color_animation_enabled';
+
   //---------------------------------------------------------------------
   // Rasterizer state member variables
   //---------------------------------------------------------------------

@@ -1,5 +1,8 @@
 part of viewer;
 
+/// Callback type for when the filesystem is ready.
+typedef void FileSystemReadyEvent();
+
 /**
  * Wrapper around the filesystem for the application.
  */
@@ -26,6 +29,8 @@ class ApplicationFileSystem
   int _bytesGranted;
   /// The available [Workspace]s.
   List<Workspace> _workspaces;
+  /// Callback for when the filesystem is ready.
+  FileSystemReadyEvent _fileSystemReadyCallback;
 
   //---------------------------------------------------------------------
   // Construction
@@ -34,8 +39,10 @@ class ApplicationFileSystem
   /**
    * Creates a new instance of the [ApplicationFilesystem].
    */
-  ApplicationFileSystem()
+  ApplicationFileSystem(FileSystemReadyEvent fileSystemReadycallback)
   {
+    _fileSystemReadyCallback = fileSystemReadycallback;
+
     _workspaces = new List<Workspace>();
 
     // Request a quota
@@ -63,6 +70,12 @@ class ApplicationFileSystem
     _workspaces.clear();
 
     _searchForWorkspaces(directoryReader);
+
+    // Notify that the filesystem is ready
+    if (_fileSystemReadyCallback != null)
+    {
+      _fileSystemReadyCallback();
+    }
   }
 
   /**

@@ -2,6 +2,8 @@ part of viewer;
 
 /// Callback type for when the texture is changed.
 typedef void TextureChangedEvent(File file, int textureUnit);
+/// Callback type for when the sampler state is changed.
+typedef void SamplerStateChangedEvent(String values, int textureUnit);
 
 /**
  * UI for individual texture units.
@@ -34,6 +36,8 @@ class TextureUnit
   int _location;
   /// Callback for when a texture change request occurs.
   TextureChangedEvent textureCallback;
+  /// Callback for when the sampler state changes.
+  SamplerStateChangedEvent samplerStateCallback;
   /// The element containing all the texture state information.
   DivElement _element;
   /// The element containing the texture.
@@ -159,18 +163,22 @@ class TextureUnit
 
     // Add the wrapping along S
     _wrapS = _createSelectElement(tableElement, 'Wrap S', wrapValues);
+    _wrapS.value = 'TextureWrapRepeat';
     _wrapS.on.change.add(_onSamplerStateChanged);
 
     // Add the wrapping along T
     _wrapT = _createSelectElement(tableElement, 'Wrap T', wrapValues);
+    _wrapT.value = 'TextureWrapRepeat';
     _wrapT.on.change.add(_onSamplerStateChanged);
 
     // Add the minification filter
     _minFilter = _createSelectElement(tableElement, 'Minification Filter', minFilterValues);
+    _minFilter.value = 'TextureMinFilterNearestMipmapLinear';
     _minFilter.on.change.add(_onSamplerStateChanged);
 
     // Add the magnification filter
     _magFilter = _createSelectElement(tableElement, 'Magnification Filter', magFilterValues);
+    _magFilter.value = 'TextureMagFilterLinear';
     _magFilter.on.change.add(_onSamplerStateChanged);
   }
 
@@ -268,7 +276,20 @@ class TextureUnit
    */
   void _onSamplerStateChanged(_)
   {
+    if (samplerStateCallback != null)
+    {
+      String props =
+      '''
+{
+  "$_wrapSName": "${_wrapS.value}",
+  "$_wrapTName": "${_wrapT.value}",
+  "$_minificationFilterName": "${_minFilter.value}",
+  "$_magnificationFilterName": "${_magFilter.value}"
+}
+      ''';
 
+      samplerStateCallback(props, _location);
+    }
   }
 }
 
@@ -298,6 +319,8 @@ class TextureSelection
   DivElement _parent;
   /// Callback for when a texture change request occurs.
   TextureChangedEvent textureCallback;
+  /// Callback for when the sampler state changes.
+  SamplerStateChangedEvent samplerStateCallback;
   /// The individual [TextureUnit]s.
   List<TextureUnit> _textureUnits;
 
@@ -319,6 +342,7 @@ class TextureSelection
     {
       TextureUnit textureUnit = new TextureUnit(i);
       textureUnit.textureCallback = _onTextureChanged;
+      textureUnit.samplerStateCallback = _onSamplerStateChanged;
 
       _textureUnits.add(textureUnit);
       _parent.nodes.add(textureUnit.element);
@@ -380,6 +404,18 @@ class TextureSelection
     if (textureCallback != null)
     {
       textureCallback(file, textureUnit);
+    }
+  }
+
+  /**
+   * Callback for when a [SamplerState] is changed.
+   */
+  void _onSamplerStateChanged(String values, int textureUnit)
+  {
+    // Propagate the event
+    if (samplerStateCallback != null)
+    {
+      samplerStateCallback(values, textureUnit);
     }
   }
 }

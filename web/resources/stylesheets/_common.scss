@@ -4,6 +4,8 @@ $text_color: black;
 $background_color: #f8f8f8;
 $margin_value: 10px;
 
+$selected_color: #239bd7;
+
 $application_height: 768px;
 
 $canvas_width:  640px;
@@ -23,7 +25,7 @@ $ui_row_min_width: 400px;
 $ui_row_padding:   8px;
 
 $drop_area_border_color: #0f0f0f;
-$drop_area_over_border_color: #ff0000;
+$drop_area_over_border_color: $selected_color;
 
 $tab_border_color: #abadb3;
 $tab_background_color: #fff;
@@ -32,6 +34,7 @@ $tab_padding: 5px;
 $tab_border_width: 1px;
 $tab_border_radius: 5px;
 
+$model_button_size: 48px;
 $model_width: 256px;
 $model_height: 256px;
 
@@ -39,6 +42,11 @@ $texture_size: 128px;
 $texture_width: $texture_size;
 $texture_height: $texture_size;
 $texture_drop_border_width: 3px;
+
+$dialog_width: 600px;
+$dialog_padding: 10px;
+$about_dialog_width: 300px;
+$save_as_dialog_width: 450px;
 
 $ui_element_min_width: 300px;
 
@@ -109,6 +117,27 @@ $canvas_top_absolute: $menu_bar_height + $margin_value + $canvas_wrap_top;
     pointer-events: none;
     position: absolute;
     z-index: 1;
+}
+
+@mixin heading
+{
+  text-color:  $text_color;
+  @include bottom_border($text_color, $tab_border_width);
+
+  margin:
+  {
+    left:   0px;
+    right:  0px;
+    top:    0px;
+    bottom: $ui_row_padding;
+  }
+  padding:
+  {
+    left:   0px;
+    right:  0px;
+    top:    0px;
+    bottom: 5px;
+  }
 }
 
 .centered
