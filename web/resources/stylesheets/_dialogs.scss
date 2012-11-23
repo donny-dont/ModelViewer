@@ -1,0 +1,103 @@
+/* Dialogs.css */
+
+.modal_dialog
+{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 99999;
+  transition: opacity 400ms ease-in;
+  -webkit-transition: opacity 400ms ease-in;
+  -moz-transition: opacity 400ms ease-in;
+}
+
+.modal_dialog_opened
+{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal_dialog_closed
+{
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal_dialog > div
+{
+  width: $dialog_width;
+  position: relative;
+  padding: $dialog_padding;
+  margin: 10% auto;
+  background: $background_color;
+  border-radius: $tab_border_radius;
+  z-index: 100000;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.25);
+
+  p   { text-align: center; }
+}
+
+#about_dialog > div
+{
+  width: $about_dialog_width;
+
+  a { text-decoration: none; }
+}
+
+#save_as_dialog > div
+{
+  width: $save_as_dialog_width;
+
+  input { width: 100%; }
+}
+
+.logo
+{
+  display: block;
+  margin: 0px auto;
+}
+
+.dialog_buttons
+{
+  padding:10px;
+
+  border-top: 1px solid black;
+}
+
+@mixin dialog_button
+{
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.submit_button
+{
+  @include dialog_button;
+  color:#F8F8F8;
+  background:#008FD2;
+  border:solid 1px #00A4E4;
+}
+
+.submit_button:hover
+{
+  background:#0073CC;
+}
+
+.cancel_button
+{
+  @include dialog_button;
+  border:solid 1px black;
+  border-radius:4px;
+}
+
+.cancel_button:hover
+{
+  background:#D8D8D8;
+}
