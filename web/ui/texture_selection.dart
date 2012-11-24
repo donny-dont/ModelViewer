@@ -19,14 +19,22 @@ class TextureUnit
 
   /// Serialization name for the file.
   static const String _textureFileName = 'filename';
-  /// Serialization name for the wrapping mode in the u direction.
+  /// Serialization name for the wrapping mode in the s direction.
   static const String _wrapSName = 'wrapS';
-  /// Serialization name for the wrapping mode in the v direction.
+  /// Serialization name for the wrapping mode in the t direction.
   static const String _wrapTName = 'wrapT';
   /// Serialization name for the minification filter.
   static const String _minificationFilterName = 'minFilter';
   /// Serialization name for the magnification filter.
   static const String _magnificationFilterName = 'maxFilter';
+  /// Tooltip for the wrapping mode in the s direction.
+  static const String _wrapSToolTip = 'Wrapping in the S direction';
+  /// Tooltip for the wrapping mode in the v direction.
+  static const String _wrapTToolTip = 'Wrapping in the T direction';
+  /// Tooltip for the minification filter.
+  static const String _minificationFilterToolTip = 'Tool tip';
+  /// Tooltip for the magnification filter.
+  static const String _magnificationFilterToolTip = 'Tool tip';
 
   //---------------------------------------------------------------------
   // Member variables
@@ -166,22 +174,22 @@ class TextureUnit
     };
 
     // Add the wrapping along S
-    _wrapS = _createSelectElement(tableElement, 'Wrap S', wrapValues);
+    _wrapS = _createSelectElement(tableElement, 'Wrap S', wrapValues, _wrapSToolTip);
     _wrapS.value = 'TextureWrapRepeat';
     _wrapS.on.change.add(_onSamplerStateChanged);
 
     // Add the wrapping along T
-    _wrapT = _createSelectElement(tableElement, 'Wrap T', wrapValues);
+    _wrapT = _createSelectElement(tableElement, 'Wrap T', wrapValues, _wrapSToolTip);
     _wrapT.value = 'TextureWrapRepeat';
     _wrapT.on.change.add(_onSamplerStateChanged);
 
     // Add the minification filter
-    _minFilter = _createSelectElement(tableElement, 'Minification Filter', minFilterValues);
+    _minFilter = _createSelectElement(tableElement, 'Minification Filter', minFilterValues, _minificationFilterToolTip);
     _minFilter.value = 'TextureMinFilterNearestMipmapLinear';
     _minFilter.on.change.add(_onSamplerStateChanged);
 
     // Add the magnification filter
-    _magFilter = _createSelectElement(tableElement, 'Magnification Filter', magFilterValues);
+    _magFilter = _createSelectElement(tableElement, 'Magnification Filter', magFilterValues, _magnificationFilterToolTip);
     _magFilter.value = 'TextureMagFilterLinear';
     _magFilter.on.change.add(_onSamplerStateChanged);
   }
@@ -189,17 +197,19 @@ class TextureUnit
   /**
    * Creates a [SelectElement] to modify [SamplerState].
    */
-  static SelectElement _createSelectElement(TableElement tableElement, String name, Map<String, String> values)
+  static SelectElement _createSelectElement(TableElement tableElement, String name, Map<String, String> values, String toolTipText)
   {
     TableCellElement cell;
 
     TableRowElement row = new TableRowElement();
     tableElement.nodes.add(row);
 
+    // Create the name
     cell = new TableCellElement();
     cell.innerHTML = name;
     row.nodes.add(cell);
 
+    // Create the select element
     cell = new TableCellElement();
     SelectElement select = new SelectElement();
 
@@ -213,6 +223,14 @@ class TextureUnit
 
     cell.nodes.add(select);
     row.nodes.add(cell);
+
+    // Create the tooltip
+    cell = new TableCellElement();
+    cell.classes.add(_ElementNames.variableToolTipClassName);
+
+    ToolTip toolTip = new ToolTip(toolTipText);
+    //cell.nodes.add(toolTip.element);
+    //row.nodes.add(cell);
 
     return select;
   }

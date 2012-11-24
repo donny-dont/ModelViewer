@@ -184,8 +184,6 @@ class UniformSelection
   static const String _builtinUniformsId = '#builtin_uniforms';
   /// Class name for a variable declaration.
   static const String _variableClassName = 'variable_name';
-  /// Class name for a tool tip.
-  static const String _variableToolTipClassName = 'variable_tool_tip';
   /// Built-in vertex attributes
   static final Map<String, Map<String, String>> _builtinAttributeNames = {
     'vPosition'  : { 'type': 'vec3', 'description': 'The position of the vertex' },
@@ -359,7 +357,7 @@ class UniformSelection
 
       cell = new TableCellElement();
       row.nodes.add(cell);
-      cell.classes.add(_variableToolTipClassName);
+      cell.classes.add(_ElementNames.variableToolTipClassName);
 
       ToolTip toolTip = new ToolTip(info['description']);
       cell.nodes.add(toolTip.element);

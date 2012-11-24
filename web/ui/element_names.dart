@@ -80,6 +80,8 @@ class _ElementNames
   // Tooltips
   //---------------------------------------------------------------------
 
+  /// Class name for a tool tip.
+  static const String variableToolTipClassName = 'variable_tool_tip';
   /// Class for a tool tip.
   static const String toolTipClassName = 'tool_tip';
   /// Data attribute for a tool tip.
