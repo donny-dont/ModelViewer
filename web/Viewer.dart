@@ -226,17 +226,15 @@ class Viewer
     _currentWorkspace = _fileSystem.tempWorkspace;
     _currentWorkspace.clear();
 
+    // Load the state
     loadFile(_newFileState);
 
     // Set the shader program
     _vertexShaderEditor.source = _defaultVertexSource;
     _fragmentShaderEditor.source = _defaultFragmentSource;
 
-    Game game = Game.instance;
-    game.setVertexSource(_defaultVertexSource);
-    game.setFragmentSource(_defaultFragmentSource);
-
-    _onShaderProgramChanged();
+    // Set the shader program
+    _updateWorkspace();
   }
 
   /**
@@ -281,6 +279,13 @@ class Viewer
   {
     Map data = new Map();
 
+    // Append the model data to the map
+    Map modelData = _modelSelection.toJson();
+
+    modelData.forEach((key, value) {
+      data[key] = value;
+    });
+
     // Append the texture data to the map
     Map textureData = _textureSelection.toJson();
 
@@ -303,8 +308,46 @@ class Viewer
    */
   void deserialize(Map data)
   {
+    _modelSelection.fromJson(data);
     _rendererSelection.fromJson(data);
     _textureSelection.fromJson(data);
+  }
+
+  /**
+   * Updates the workspace.
+   *
+   * Called after a workspace is loaded.
+   */
+  void _updateWorkspace()
+  {
+    Game game = Game.instance;
+
+    // Update the model
+    String modelPath = _modelSelection.modelPath;
+
+    if (modelPath.isEmpty)
+    {
+      // Load from workspace
+    }
+
+    game.mesh = modelPath;
+
+    // Update the textures
+    List<TextureUnit> textureUnits = _textureSelection.textureUnits;
+    int length = textureUnits.length;
+
+    for (int i = 0; i < length; ++i)
+    {
+      TextureUnit textureUnit = textureUnits[i];
+
+      game.setTextureAt(i, textureUnit.texture);
+    }
+
+    // Update the shaders
+    game.setVertexSource(_vertexShaderEditor.source);
+    game.setFragmentSource(_fragmentShaderEditor.source);
+
+    _onShaderProgramChanged();
   }
 
   //---------------------------------------------------------------------
@@ -362,7 +405,8 @@ class Viewer
    */
   void _onLoad(String name)
   {
-
+    print('Loading $name');
+    _loadDialog.hide();
   }
 
   /**

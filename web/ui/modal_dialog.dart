@@ -102,6 +102,8 @@ class FileSystemDialog extends ModalDialog
   List<TableRowElement> _files;
   /// Callback for when the dialog is submitted.
   FileDialogSubmitEvent submitCallback;
+  /// The currently selected file.
+  int _selectedFile;
 
   /**
    * Creates an instance of the [LoadDialog] class.
@@ -129,6 +131,7 @@ class FileSystemDialog extends ModalDialog
     TableElement table = _element.query('table');
     table.nodes.clear();
 
+    _selectedFile = -1;
     _files.clear();
     int length = _fileSystem.workspaces.length;
 
@@ -160,6 +163,8 @@ class FileSystemDialog extends ModalDialog
    */
   void _selectFile(int index)
   {
+    _selectedFile = index;
+
     int length = _files.length;
 
     for (int i = 0; i < length; ++i)
@@ -206,7 +211,12 @@ class LoadDialog extends FileSystemDialog
    */
   void _onSubmit(_)
   {
-    print('Load file');
+    if ((_selectedFile != -1) && (submitCallback != null))
+    {
+      String name = _fileSystem.workspaces[_selectedFile].name;
+
+      submitCallback(name);
+    }
   }
 }
 

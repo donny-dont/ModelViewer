@@ -3,6 +3,7 @@ part of viewer;
 String _newFileState =
 '''
 {
+    "model": "cube",
     "blendState": {
         "blendAlphaOp": "BlendOpAdd",
         "writeRenderTargetRed": true,
@@ -28,115 +29,115 @@ String _newFileState =
     },
     "textures": [
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "web/resources/textures/dart_tex.png",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         },
         {
-            "wrapS": "TextureWrapClampToEdge",
-            "wrapT": "TextureWrapClampToEdge",
+            "wrapS": "TextureWrapRepeat",
+            "wrapT": "TextureWrapRepeat",
             "filename": "",
-            "minFilter": "TextureMinFilterLinear",
+            "minFilter": "TextureMinFilterNearestMipmapLinear",
             "maxFilter": "TextureMagFilterLinear"
         }
     ]

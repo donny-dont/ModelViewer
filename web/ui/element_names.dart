@@ -79,6 +79,15 @@ class _ElementNames
   static const String cancelButtonClassName = '.cancel_button';
 
   //---------------------------------------------------------------------
+  // Drag and drop
+  //---------------------------------------------------------------------
+
+  /// Class name for drag over
+  static const String dragOverClassName = 'drag_over';
+  /// Class name for drag leave
+  static const String dragLeaveClassName = 'drag_none';
+
+  //---------------------------------------------------------------------
   // Tooltips
   //---------------------------------------------------------------------
 
