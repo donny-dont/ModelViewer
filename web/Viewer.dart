@@ -46,6 +46,13 @@ class Viewer
 
   /// Serialization name for the renderer state.
   static const String _rendererStateName = 'rendererState';
+  /**
+   * The delay before showing the file system dialog.
+   *
+   * Assume that after x amount of time that the request file system
+   * dialog has not been accepted.
+   */
+  static const int _fileSystemDialogDelay = 10000;
 
   //---------------------------------------------------------------------
   // Member variables
@@ -69,6 +76,8 @@ class Viewer
   RendererSelection _rendererSelection;
   /// The [CompileLog] for the shader program.
   CompileLog _compileLog;
+  /// The [ModalDialog] for the loading screen.
+  ModalDialog _loadingScreen;
   /// The [ModalDialog] for the filesystem dialog.
   ModalDialog _fileSystemDialog;
   /// The [ModalDialog] for the save dialog.
@@ -189,12 +198,18 @@ class Viewer
    */
   void _setupDialogs()
   {
+    _loadingScreen = new ModalDialog(_ElementNames.loadingScreenName);
     _fileSystemDialog = new ModalDialog(_ElementNames.filesystemDialogName);
     _aboutDialog = new SimpleModalDialog(_ElementNames.aboutDialogName);
 
     _saveDialog = new SaveDialog(_ElementNames.saveDialogName);
 
     _loadDialog = new LoadDialog(_ElementNames.loadDialogName, _fileSystem);
+
+    // Create the callback for displaying the file system dialog
+    Timer timer = new Timer(_fileSystemDialogDelay, (_) {
+      _onFileSystemTimeout();
+    });
   }
 
   //---------------------------------------------------------------------
@@ -286,7 +301,27 @@ class Viewer
    */
   void _onFileSystemReady()
   {
-    _fileSystemDialog.hide();
+    if (_loadingScreen.visible)
+    {
+      _loadingScreen.hide();
+    }
+
+    if (_fileSystemDialog.visible)
+    {
+      _fileSystemDialog.hide();
+    }
+  }
+
+  /**
+   * Callback for when the request dialog.
+   */
+  void _onFileSystemTimeout()
+  {
+    if (_loadingScreen.visible)
+    {
+      _loadingScreen.hide();
+      _fileSystemDialog.show();
+    }
   }
 
   /**

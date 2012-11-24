@@ -40,6 +40,12 @@
   p   { text-align: center; }
 }
 
+#loading_screen > div
+{
+  width: 64px;
+  margin: 25% auto;
+}
+
 #about_dialog > div
 {
   width: $about_dialog_width;

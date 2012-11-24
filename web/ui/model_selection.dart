@@ -90,7 +90,7 @@ class ModelSelection
 
     ParagraphElement dropText = new ParagraphElement();
     dropText.innerHTML = _dropText;
-    dropText.classes.add('hidden');
+    dropText.classes.add(_ElementNames.hiddenClass);
     modelDropArea.nodes.add(dropText);
 
     modelDropArea.on.dragEnter.add((_) {
@@ -119,10 +119,10 @@ class ModelSelection
     });
 
     modelDropArea.on.mouseOver.add((_) {
-      dropText.classes.remove('hidden');
+      dropText.classes.remove(_ElementNames.hiddenClass);
     });
     modelDropArea.on.mouseOut.add((_) {
-      dropText.classes.add('hidden');
+      dropText.classes.add(_ElementNames.hiddenClass);
     });
   }
 

@@ -101,7 +101,7 @@ class TextureUnit
 
     ParagraphElement dropText = new ParagraphElement();
     dropText.innerHTML = _dropText;
-    dropText.classes.add('hidden');
+    dropText.classes.add(_ElementNames.hiddenClass);
     textureDropArea.nodes.add(dropText);
 
     _textureDisplay = new ImageElement();
@@ -132,10 +132,10 @@ class TextureUnit
     });
 
     textureArea.on.mouseOver.add((_) {
-      dropText.classes.remove('hidden');
+      dropText.classes.remove(_ElementNames.hiddenClass);
     });
     textureArea.on.mouseOut.add((_) {
-      dropText.classes.add('hidden');
+      dropText.classes.add(_ElementNames.hiddenClass);
     });
   }
 

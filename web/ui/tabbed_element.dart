@@ -6,7 +6,6 @@ part of viewer;
 class TabbedElement
 {
   static const String _selectedTabClass = 'selected';
-  static const String _hiddenClass = 'hidden';
 
   /// The tabs associated with the container.
   List<Element> _tabs;
@@ -58,12 +57,12 @@ class TabbedElement
       if (i == index)
       {
         _tabs[i].classes.add(_selectedTabClass);
-        _tabContents[i].classes.remove(_hiddenClass);
+        _tabContents[i].classes.remove(_ElementNames.hiddenClass);
       }
       else
       {
         _tabs[i].classes.remove(_selectedTabClass);
-        _tabContents[i].classes.add(_hiddenClass);
+        _tabContents[i].classes.add(_ElementNames.hiddenClass);
       }
     }
   }

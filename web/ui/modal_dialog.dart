@@ -27,7 +27,15 @@ class ModalDialog
   ModalDialog(String id)
   {
     _element = query(id);
+
+    // A hidden class is used so the dialogs don't fade out when
+    // the page is opened. Remove the hidden class right away
+    // so fading in works as expected.
+    _element.classes.remove(_ElementNames.hiddenClass);
   }
+
+  /// Whether the modal dialog is visible.
+  bool get visible => _element.classes.contains(_openedDialogClass);
 
   /**
    * Shows the modal dialog.

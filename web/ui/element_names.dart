@@ -62,6 +62,8 @@ class _ElementNames
   // UI dialogs
   //---------------------------------------------------------------------
 
+  /// The ID of the modal dialog for the loading screen.
+  static const String loadingScreenName = '#loading_screen';
   /// The ID of the modal dialog for the filesystem.
   static const String filesystemDialogName = '#filesystem_access_dialog';
   /// The ID of the modal dialog for the about box.
@@ -86,4 +88,7 @@ class _ElementNames
   static const String toolTipClassName = 'tool_tip';
   /// Data attribute for a tool tip.
   static const String toolTipAttributeName = 'tool_tip_attribute';
+
+  /// Class name for an element to hide
+  static const String hiddenClass = 'hidden';
 }
