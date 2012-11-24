@@ -16,6 +16,10 @@ class Workspace
   static const _metadataFileName = 'meta.json';
   /// The filename for the state.
   static const _stateFileName = 'state.json';
+  /// The filename for the vertex shader.
+  static const _vertexShaderFileName = 'shader.vert';
+  /// The filename for the fragment shader.
+  static const _fragmentShaderFileName = 'shader.frag';
   /// The filename for the model.
   static const _modelFileName = 'model.mesh';
 
@@ -67,9 +71,55 @@ class Workspace
   //---------------------------------------------------------------------
 
   /**
+   * Loads metadata from the file system.
+   */
+  Future<Map> loadMetadata()
+  {
+    return _readJson(_metadataFileName);
+  }
+
+  /**
+   * Loads state from the file system.
+   */
+  Future<Map> loadState()
+  {
+    return _readJson(_stateFileName);
+  }
+
+  /**
+   * Saves vertex shader to the file system.
+   */
+  Future<String> loadVertexShader()
+  {
+    return _readText(_vertexShaderFileName);
+  }
+
+  /**
+   * Saves fragment shader to the file system.
+   */
+  Future<String> loadFragmentShader()
+  {
+    return _readText(_fragmentShaderFileName);
+  }
+
+  /**
    * Reads a json from the local filesystem.
    */
   Future<Map> _readJson(String fileName)
+  {
+    Completer completer = new Completer();
+
+    _readText(fileName).then((value) {
+      completer.complete(JSON.parse(value));
+    });
+
+    return completer.future;
+  }
+
+  /**
+   * Reads a text fil from the local filesystem.
+   */
+  Future<String> _readText(String fileName)
   {
     Completer completer = new Completer();
 
@@ -78,10 +128,7 @@ class Workspace
         FileReader fileReader = new FileReader();
 
         fileReader.on.loadEnd.add((_) {
-          Map values = JSON.parse(fileReader.result);
-
-          _name = values['name'];
-          print('Workspace name: $_name');
+          completer.complete(fileReader.result);
         });
 
         fileReader.readAsText(file);
@@ -100,7 +147,31 @@ class Workspace
    */
   Future<String> saveMetadata(String values)
   {
-    return _writeJson(_metadataFileName, values);
+    return _writeText(_metadataFileName, values);
+  }
+
+  /**
+   * Saves state to the file system.
+   */
+  Future<String> saveState(String values)
+  {
+    return _writeText(_stateFileName, values);
+  }
+
+  /**
+   * Saves vertex shader to the file system.
+   */
+  Future<String> saveVertexShader(String shader)
+  {
+    return _writeText(_vertexShaderFileName, shader);
+  }
+
+  /**
+   * Saves fragment shader to the file system.
+   */
+  Future<String> saveFragmentShader(String shader)
+  {
+    return _writeText(_fragmentShaderFileName, shader);
   }
 
   /**
@@ -124,9 +195,9 @@ class Workspace
   }
 
   /**
-   * Writes a json to the local filesystem.
+   * Writes a text file to the local filesystem.
    */
-  Future<String> _writeJson(String fileName, String json)
+  Future<String> _writeText(String fileName, String json)
   {
     Blob data = new Blob([json], 'text/plain');
 

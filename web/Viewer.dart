@@ -155,7 +155,7 @@ class Viewer
   {
     DivElement newFileButton = query(_ElementNames.newFileButtonName);
     newFileButton.on.click.add((_) {
-      newFile();
+      newWorkspace();
     });
 
     DivElement loadFileButton = query(_ElementNames.loadFileButtonName);
@@ -165,7 +165,7 @@ class Viewer
 
     DivElement saveFileButton = query(_ElementNames.saveFileButtonName);
     saveFileButton.on.click.add((_) {
-      saveFile();
+      saveWorkspace();
     });
 
     DivElement saveAsFileButton = query(_ElementNames.saveAsFileButtonName);
@@ -220,14 +220,14 @@ class Viewer
   /**
    * Resets the state of the application.
    */
-  void newFile()
+  void newWorkspace()
   {
     // Clear the temporary file system
     _currentWorkspace = _fileSystem.tempWorkspace;
     _currentWorkspace.clear();
 
     // Load the state
-    loadFile(_newFileState);
+    deserialize(JSON.parse(_newFileState));
 
     // Set the shader program
     _vertexShaderEditor.source = _defaultVertexSource;
@@ -238,9 +238,33 @@ class Viewer
   }
 
   /**
+   * Loads the state of the application.
+   */
+  void loadWorkspace(String name)
+  {
+    _fileSystem.loadWorkspace(name).then((workspace) {
+      _currentWorkspace = workspace;
+
+      _currentWorkspace.loadVertexShader().then((vertexSource) {
+        _vertexShaderEditor.source = vertexSource;
+
+        _currentWorkspace.loadFragmentShader().then((fragmentSource) {
+          _fragmentShaderEditor.source = fragmentSource;
+
+          _currentWorkspace.loadState().then((state) {
+            deserialize(state);
+
+            _updateWorkspace();
+          });
+        });
+      });
+    });
+  }
+
+  /**
    * Saves the state of the application.
    */
-  void saveFile()
+  void saveWorkspace()
   {
     // Check to see if the current workspace is the temporary one.
     if (_currentWorkspace == _fileSystem.tempWorkspace)
@@ -249,15 +273,16 @@ class Viewer
     }
     else
     {
-      Map values = _serialize();
-      String json = JSON.stringify(values);
-
-      print('Application State\n');
-      print(json);
+      _saveWorkspaceState();
     }
   }
 
-  void saveFileAs(String name)
+  /**
+   * Saves the state of the application.
+   *
+   * Creates a new workspace with the given [name].
+   */
+  void saveWorkspaceAs(String name)
   {
     _fileSystem.copyWorkspace(_currentWorkspace, name).then((workspace) {
       // Get the paths to the workspaces
@@ -274,16 +299,24 @@ class Viewer
         textureUnit.texture = texturePath.replaceAll(originalPath, copyPath);
       }
 
-
+      _saveWorkspaceState();
     });
   }
 
   /**
-   * Loads the state of the application from a JSON.
+   * Saves the state of the application.
    */
-  void loadFile(String json)
+  void _saveWorkspaceState()
   {
-    deserialize(JSON.parse(json));
+    Map values = _serialize();
+    String state = JSON.stringify(values);
+
+    _currentWorkspace.saveState(state)
+      .chain((_) => _currentWorkspace.saveVertexShader(_vertexShaderEditor.source))
+      .chain((_) => _currentWorkspace.saveFragmentShader(_fragmentShaderEditor.source))
+      .then ((_) {
+        print('Worspace saved');
+      });
   }
 
   /**
@@ -390,7 +423,7 @@ class Viewer
     _loadDialog = new LoadDialog(_ElementNames.loadDialogName, _fileSystem);
     _loadDialog.submitCallback = _onLoad;
 
-    newFile();
+    newWorkspace();
   }
 
   /**
@@ -412,7 +445,7 @@ class Viewer
   {
     _saveDialog.hide();
 
-    saveFileAs(name);
+    saveWorkspaceAs(name);
   }
 
   /**
@@ -420,8 +453,9 @@ class Viewer
    */
   void _onLoad(String name)
   {
-    print('Loading $name');
     _loadDialog.hide();
+
+    loadWorkspace(name);
   }
 
   /**
