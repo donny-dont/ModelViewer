@@ -156,8 +156,8 @@ class ApplicationFileSystem
     Completer workspaceCreation = new Completer();
     String newDirectoryName = _getNewDirectoryName();
 
-    _createWorkspace(newDirectoryName, name).then((copy) {
-      original._directory.copyTo(copy._directory);
+    original._directory.copyTo(_fileSystem.root, newDirectoryName, (newDirectory) {
+      Workspace copy = new Workspace(newDirectory, name);
       _workspaces.add(copy);
 
       // Create metadata
@@ -165,7 +165,7 @@ class ApplicationFileSystem
       copy.saveMetadata(metadata).then((_) {
         workspaceCreation.complete(copy);
       });
-    });
+    }, ApplicationFileSystem._onFileSystemError);
 
     return workspaceCreation.future;
   }

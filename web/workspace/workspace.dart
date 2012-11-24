@@ -27,6 +27,8 @@ class Workspace
   DirectoryEntry _directory;
   /// The name of the workspace.
   String _name;
+  /// The path to the workspace.
+  String _path;
 
   //---------------------------------------------------------------------
   // Construction
@@ -38,7 +40,10 @@ class Workspace
   Workspace(DirectoryEntry entry, [String name = ''])
   {
     _directory = entry;
+    _path = _directory.fullPath;
     _name = name;
+
+    print('Path: $_path');
 
     if (_name.isEmpty)
     {
@@ -54,6 +59,8 @@ class Workspace
 
   /// The name of the workspace
   String get name => _name;
+  /// The path to the workspace
+  String get path => _path;
 
   //---------------------------------------------------------------------
   // File reading

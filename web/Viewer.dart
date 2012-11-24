@@ -249,7 +249,7 @@ class Viewer
     }
     else
     {
-      Map values = serialize();
+      Map values = _serialize();
       String json = JSON.stringify(values);
 
       print('Application State\n');
@@ -260,7 +260,21 @@ class Viewer
   void saveFileAs(String name)
   {
     _fileSystem.copyWorkspace(_currentWorkspace, name).then((workspace) {
+      // Get the paths to the workspaces
+      String originalPath = _currentWorkspace.path;
+      String copyPath = workspace.path;
+
+      // Set the workspace as the new one
       _currentWorkspace = workspace;
+
+      // Update the asset paths
+      for (TextureUnit textureUnit in _textureSelection.textureUnits)
+      {
+        String texturePath = textureUnit.texture;
+        textureUnit.texture = texturePath.replaceAll(originalPath, copyPath);
+      }
+
+
     });
   }
 
@@ -275,7 +289,7 @@ class Viewer
   /**
    * Serializes the state of the application.
    */
-  Map serialize()
+  Map _serialize()
   {
     Map data = new Map();
 
@@ -341,6 +355,7 @@ class Viewer
       TextureUnit textureUnit = textureUnits[i];
 
       game.setTextureAt(i, textureUnit.texture);
+      game.setSamplerStateAt(i, textureUnit.samplerState);
     }
 
     // Update the shaders

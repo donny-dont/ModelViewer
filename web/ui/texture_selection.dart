@@ -246,6 +246,20 @@ class TextureUnit
   String get texture => _textureDisplay.src;
   set texture(String value) { _textureDisplay.src = value; }
 
+  /// The sampler state contained in the [TextureUnit].
+  String get samplerState
+  {
+    return
+      '''
+{
+  "$_wrapSName": "${_wrapS.value}",
+  "$_wrapTName": "${_wrapT.value}",
+  "$_minificationFilterName": "${_minFilter.value}",
+  "$_magnificationFilterName": "${_magFilter.value}"
+}
+      ''';
+  }
+
   //---------------------------------------------------------------------
   // Serialization
   //---------------------------------------------------------------------
@@ -300,17 +314,7 @@ class TextureUnit
   {
     if (samplerStateCallback != null)
     {
-      String props =
-      '''
-{
-  "$_wrapSName": "${_wrapS.value}",
-  "$_wrapTName": "${_wrapT.value}",
-  "$_minificationFilterName": "${_minFilter.value}",
-  "$_magnificationFilterName": "${_magFilter.value}"
-}
-      ''';
-
-      samplerStateCallback(props, _location);
+      samplerStateCallback(samplerState, _location);
     }
   }
 }
