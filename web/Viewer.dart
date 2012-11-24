@@ -163,6 +163,11 @@ class Viewer
     aboutButton.on.click.add((_) {
       _aboutDialog.show();
     });
+
+    DivElement fullscreenButton = query(_ElementNames.fullscreenButtonName);
+    fullscreenButton.on.click.add((_) {
+      Game.instance.fullscreen = true;
+    });
   }
 
   /**

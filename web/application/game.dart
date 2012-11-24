@@ -31,8 +31,12 @@ class Game
   // Member variables
   //---------------------------------------------------------------------
 
-  // CanvasElement
+  /// The canvas holding the game.
   CanvasElement _canvas;
+  /// The original width of the canvas; used for fullscreen support.
+  int _originalCanvasWidth;
+  /// The original height of the canvas; used for fullscreen support.
+  int _originalCanvasHeight;
   /// Spectre graphics device.
   GraphicsDevice _graphicsDevice;
   /// Immediate rendering context.
@@ -215,6 +219,12 @@ class Game
 
     assert(gl != null);
 
+    // Setup fullscreen toggle
+    _originalCanvasWidth = canvas.width;
+    _originalCanvasHeight = canvas.height;
+
+    _canvas.on.fullscreenChange.add(_onFullscreenChange);
+
     // Initialize Spectre
     initSpectre();
 
@@ -229,8 +239,8 @@ class Game
     var viewportProperties = {
       'x': 0,
       'y': 0,
-      'width': canvas.width,
-      'height': canvas.height
+      'width' : _canvas.width,
+      'height': _canvas.height
     } ;
 
     // Create the viewport
@@ -262,99 +272,15 @@ class Game
   }
 
   /**
-   * Responds to key down events
-   */
-  void _keyDownHandler(KeyboardEvent event)
-  {
-    if (!_pointerLocked)
-    {
-      return;
-    }
-
-    switch (event.keyCode)
-    {
-      case _keyCodeA:
-        _cameraController.strafeLeft = true;
-      break;
-      case _keyCodeD:
-        _cameraController.strafeRight = true;
-      break;
-      case _keyCodeS:
-        _cameraController.backward = true;
-      break;
-      case _keyCodeW:
-        _cameraController.forward = true;
-      break;
-    }
-  }
-
-  /**
-   * Responds to key up events
-   */
-  void _keyUpHandler(KeyboardEvent event)
-  {
-    switch (event.keyCode)
-    {
-      case _keyCodeA:
-        _cameraController.strafeLeft = false;
-      break;
-      case _keyCodeD:
-        _cameraController.strafeRight = false;
-      break;
-      case _keyCodeS:
-        _cameraController.backward = false;
-      break;
-      case _keyCodeW:
-        _cameraController.forward = false;
-      break;
-    }
-  }
-
-  /**
-   * Responds to mouse move events
-   */
-  void _mouseMoveHandler(MouseEvent event) {
-    if (_pointerLocked)
-    {
-      _cameraController.accumDX += event.webkitMovementX;
-      _cameraController.accumDY += event.webkitMovementY;
-    }
-  }
-
-  /**
-   * Respond to pointer lock state changes.
-   */
-  void _pointerLockChange(Event event)
-  {
-    if (_pointerLocked)
-    {
-      print('Canvas owns pointer.');
-    }
-    else
-    {
-      print('Canvas does not own pointer.');
-    }
-  }
-
-  /**
-   * Respond to clicks on the canvas
-   */
-  void _canvasClicked(Event event)
-  {
-    // Request pointer lock
-    _canvas.webkitRequestPointerLock();
-  }
-
-  /**
    * Bind the keyboard and mouse to the camera controller
    */
   void _bindControls()
   {
-    _canvas.on.click.add(_canvasClicked);
-    document.on.pointerLockChange.add(_pointerLockChange);
-    document.on.keyDown.add(_keyDownHandler);
-    document.on.keyUp.add(_keyUpHandler);
-    document.on.mouseMove.add(_mouseMoveHandler);
+    _canvas.on.click.add(_onCanvasClicked);
+    document.on.pointerLockChange.add(_onPointerLockChange);
+    document.on.keyDown.add(_onKeyDown);
+    document.on.keyUp.add(_onKeyUp);
+    document.on.mouseMove.add(_onMouseMove);
   }
 
   /**
@@ -362,10 +288,6 @@ class Game
    */
   void _createTransforms()
   {
-    // Compute the aspect ratio
-    Viewport viewport = _graphicsDevice.getDeviceChild(_viewport);
-    double aspectRatio = viewport.width / viewport.height;
-
     // The camera is located -2.5 units along the Z axis.
     _camera.position = new vec3.raw(0.0, 0.0, -2.5);
     // The camera is pointed at the origin.
@@ -381,6 +303,30 @@ class Game
     _modelViewProjectionMatrixArray = new Float32Array(16);
     _projectionMatrixArray = new Float32Array(16);
     _normalMatrixArray = new Float32Array(16);
+  }
+
+  /**
+   * Resets the viewport.
+   *
+   * Called when a change to fullscreen mode is detected.
+   */
+  void _resetView()
+  {
+    int width = _canvas.width;
+    int height = _canvas.height;
+
+    // Modify the viewport
+    var viewportProperties = {
+      'x': 0,
+      'y': 0,
+      'width' : width,
+      'height': height
+    } ;
+
+    _graphicsDevice.configureDeviceChild(_viewport, viewportProperties);
+
+    // Change the aspect ratio
+    _camera.aspectRatio = width  / height;
   }
 
   /**
@@ -687,7 +633,24 @@ class Game
   /// Retrieves the instance of [Game].
   static Game get instance => _gameInstance;
   /// Whether the canvas has control of the pointer.
-  bool get _pointerLocked => _canvas == document.webkitPointerLockElement;
+  bool get _isPointerLocked => _canvas == document.webkitPointerLockElement;
+
+  /// Puts the game into fullscreen mode.
+  bool get fullscreen => _canvas == document.webkitFullscreenElement;
+  set fullscreen(bool value)
+  {
+    if (value != fullscreen)
+    {
+      if (value)
+      {
+        _canvas.webkitRequestFullscreen();
+      }
+      else
+      {
+        _canvas.webkitExitFullscreen();
+      }
+    }
+  }
 
   /**
    * Sets the mesh to display.
@@ -882,6 +845,120 @@ class Game
   void _getShaderUniforms(String name, int index, String type, int size, WebGLUniformLocation location)
   {
     _shaderUniforms[name] = type;
+  }
+
+  //---------------------------------------------------------------------
+  // Events
+  //---------------------------------------------------------------------
+
+  /**
+   * Responds to key down events
+   */
+  void _onKeyDown(KeyboardEvent event)
+  {
+    if (!_isPointerLocked)
+    {
+      return;
+    }
+
+    switch (event.keyCode)
+    {
+      case _keyCodeA:
+        _cameraController.strafeLeft = true;
+      break;
+      case _keyCodeD:
+        _cameraController.strafeRight = true;
+      break;
+      case _keyCodeS:
+        _cameraController.backward = true;
+      break;
+      case _keyCodeW:
+        _cameraController.forward = true;
+      break;
+    }
+  }
+
+  /**
+   * Responds to key up events
+   */
+  void _onKeyUp(KeyboardEvent event)
+  {
+    switch (event.keyCode)
+    {
+      case _keyCodeA:
+        _cameraController.strafeLeft = false;
+      break;
+      case _keyCodeD:
+        _cameraController.strafeRight = false;
+      break;
+      case _keyCodeS:
+        _cameraController.backward = false;
+      break;
+      case _keyCodeW:
+        _cameraController.forward = false;
+      break;
+    }
+  }
+
+  /**
+   * Responds to mouse move events
+   */
+  void _onMouseMove(MouseEvent event)
+  {
+    if (_isPointerLocked)
+    {
+      _cameraController.accumDX += event.webkitMovementX;
+      _cameraController.accumDY += event.webkitMovementY;
+    }
+  }
+
+  /**
+   * Respond to fullscreen state changes.
+   */
+  void _onFullscreenChange(Event event)
+  {
+    if (document.webkitIsFullScreen)
+    {
+      // Save off old values
+      _originalCanvasWidth = _canvas.width;
+      _originalCanvasHeight = _canvas.height;
+
+      // Expand to the screen size
+      Screen screen = window.screen;
+      _canvas.width = screen.width;
+      _canvas.height = screen.height;
+    }
+    else
+    {
+      _canvas.width = _originalCanvasWidth;
+      _canvas.height = _originalCanvasHeight;
+    }
+
+    _resetView();
+  }
+
+  /**
+   * Respond to pointer lock state changes.
+   */
+  void _onPointerLockChange(Event event)
+  {
+    if (_isPointerLocked)
+    {
+      print('Canvas owns pointer.');
+    }
+    else
+    {
+      print('Canvas does not own pointer.');
+    }
+  }
+
+  /**
+   * Respond to clicks on the canvas
+   */
+  void _onCanvasClicked(Event event)
+  {
+    // Request pointer lock
+    _canvas.webkitRequestPointerLock();
   }
 
   //---------------------------------------------------------------------
