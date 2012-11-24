@@ -215,13 +215,24 @@ class Workspace
 
     _directory.getFile(fileName, options: { 'create': true }, successCallback: (fileEntry) {
       fileEntry.createWriter((fileWriter) {
-        fileWriter.on.writeEnd.add((_) {
-          String url = fileEntry.toURL();
+        bool truncated = false;
 
-          completer.complete(url);
+        fileWriter.on.writeEnd.add((_) {
+          if (truncated)
+          {
+            completer.complete(fileEntry.toURL());
+          }
+          else
+          {
+            fileWriter.write(data);
+            truncated = true;
+          }
         });
 
-        fileWriter.write(data);
+        // Clear the current file
+        // The file is not overwritten completely unless
+        // a truncate is performed.
+        fileWriter.truncate(0);
       });
     }, errorCallback: ApplicationFileSystem._onFileSystemError);
 
