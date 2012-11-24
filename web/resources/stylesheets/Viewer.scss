@@ -84,3 +84,34 @@ h2
   @include heading;
   font-weight: normal;
 }
+
+.centered
+{
+  margin: 0px auto;
+}
+
+.hidden
+{
+  display: none;
+}
+
+a.tool_tip
+{
+  &::before
+  {
+    content: attr(tool_tip_attribute);
+    font-size: 10px;
+    position: absolute;
+    z-index: 999;
+    white-space: nowrap;
+    right: 36px;
+    background: $tab_border_color;
+    color: white;
+    padding:0px 7px;
+    line-height: 24px;
+    height: 24px;
+    opacity: 1;
+    border-radius: 4px;
+    transition: opacity 400ms ease-in;
+  }
+}

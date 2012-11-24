@@ -48,10 +48,10 @@ class _ElementNames
   /// The ID of the body for the fragment shader area.
   static const String fragmentShaderAreaName = '#fragment_shader_area';
 
-  /// The ID of the tab for the uniforms area.
-  static const String uniformTabName = '#uniform_tab';
-  /// The ID of the body for the uniforms area.
-  static const String uniformAreaName = '#uniform_area';
+  /// The ID of the tab for the shader variables area.
+  static const String variablesTabName = '#variables_tab';
+  /// The ID of the body for the shader variables area.
+  static const String variablesAreaName = '#variables_area';
 
   /// The ID of the tab for the textures area.
   static const String rendererTabName = '#renderer_tab';
@@ -75,4 +75,13 @@ class _ElementNames
   static const String submitButtonClassName = '.submit_button';
   /// The class name of a cancel button.
   static const String cancelButtonClassName = '.cancel_button';
+
+  //---------------------------------------------------------------------
+  // Tooltips
+  //---------------------------------------------------------------------
+
+  /// Class for a tool tip.
+  static const String toolTipClassName = 'tool_tip';
+  /// Data attribute for a tool tip.
+  static const String toolTipAttributeName = 'tool_tip_attribute';
 }

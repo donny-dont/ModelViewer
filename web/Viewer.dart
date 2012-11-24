@@ -27,6 +27,7 @@ part 'ui/new_file.dart';
 part 'ui/renderer_selection.dart';
 part 'ui/source_editor.dart';
 part 'ui/tabbed_element.dart';
+part 'ui/tool_tip.dart';
 part 'ui/texture_selection.dart';
 part 'ui/uniform_selection.dart';
 part 'workspace/application_file_system.dart';
@@ -174,7 +175,7 @@ class Viewer
     element.addTab(_ElementNames.textureTabName, _ElementNames.textureAreaName);
     element.addTab(_ElementNames.vertexShaderTabName, _ElementNames.vertexShaderAreaName);
     element.addTab(_ElementNames.fragmentShaderTabName, _ElementNames.fragmentShaderAreaName);
-    element.addTab(_ElementNames.uniformTabName, _ElementNames.uniformAreaName);
+    element.addTab(_ElementNames.variablesTabName, _ElementNames.variablesAreaName);
     element.addTab(_ElementNames.rendererTabName, _ElementNames.rendererAreaName);
   }
 

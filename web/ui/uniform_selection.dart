@@ -178,14 +178,30 @@ class UniformSelection
 
   /// Serialization name for the file.
   static const String _texturesName = 'textures';
+  /// The ID of the table holding the builtin vertex attributes.
+  static const String _builtinAttributesId = '#builtin_attributes';
+  /// The ID of the table holding the builtin uniform values.
+  static const String _builtinUniformsId = '#builtin_uniforms';
+  /// Class name for a variable declaration.
+  static const String _variableClassName = 'variable_name';
+  /// Class name for a tool tip.
+  static const String _variableToolTipClassName = 'variable_tool_tip';
+  /// Built-in vertex attributes
+  static final Map<String, Map<String, String>> _builtinAttributeNames = {
+    'vPosition'  : { 'type': 'vec3', 'description': 'The position of the vertex' },
+    'vTexCoord'  : { 'type': 'vec2', 'description': 'Texture coordinate for the vertex' },
+    'vNormal'    : { 'type': 'vec3', 'description': 'The vertex normal' },
+    'vTangent'   : { 'type': 'vec3', 'description': 'Tangent' },
+    'vBitangent' : { 'type': 'vec3', 'description': 'Bitangent' }
+  };
   /// Built-in uniforms
-  static final Map<String, String> _builtinUniformNames = {
-    'uTime'                     : 'float',
-    'uModelMatrix'              : 'mat4',
-    'uModelViewMatrix'          : 'mat4',
-    'uModelViewProjectionMatrix': 'mat4',
-    'uProjectionMatrix'         : 'mat4',
-    'uNormalMatrix'             : 'mat4'
+  static final Map<String, Map<String, String>> _builtinUniformNames = {
+    'uTime'                     : { 'type': 'float', 'description': 'The current time of the simulation' },
+    'uModelMatrix'              : { 'type': 'mat4' , 'description': 'The model matrix' },
+    'uModelViewMatrix'          : { 'type': 'mat4' , 'description': 'The model/view matrix' },
+    'uModelViewProjectionMatrix': { 'type': 'mat4' , 'description': 'The model/view/projection matrix' },
+    'uProjectionMatrix'         : { 'type': 'mat4' , 'description': 'The projection matrix' },
+    'uNormalMatrix'             : { 'type': 'mat4' , 'description': 'The normal matrix' }
   };
 
   //---------------------------------------------------------------------
@@ -204,8 +220,15 @@ class UniformSelection
    */
   UniformSelection()
   {
-    _parent = query('#uniform_area');
+    _parent = query(_ElementNames.variablesAreaName);
     assert(_parent != null);
+
+    TableElement table;
+    table = query(_builtinAttributesId);
+    _createVariableTable(table, _builtinAttributeNames);
+
+    table = query(_builtinUniformsId);
+    _createVariableTable(table, _builtinUniformNames);
 
     _uniforms = new Map<String, UniformValue>();
   }
@@ -270,7 +293,7 @@ class UniformSelection
     // Add to the new UI
     _uniforms = values;
 
-    int count = 1;
+    int count = 0;
 
     // Add to the UI
     _uniforms.forEach((_, value) {
@@ -317,5 +340,29 @@ class UniformSelection
     {
       changeCallback(uniformValues);
     }
+  }
+
+  /**
+   * Creates a table containing builtin variables.
+   */
+  void _createVariableTable(TableElement table, Map<String, Map<String, String>> variables)
+  {
+    variables.forEach((name, info) {
+      TableRowElement row = new TableRowElement();
+      table.nodes.add(row);
+
+      TableCellElement cell;
+      cell = new TableCellElement();
+      row.nodes.add(cell);
+      cell.classes.add(_variableClassName);
+      cell.innerHTML = '${info['type']} $name';
+
+      cell = new TableCellElement();
+      row.nodes.add(cell);
+      cell.classes.add(_variableToolTipClassName);
+
+      ToolTip toolTip = new ToolTip(info['description']);
+      cell.nodes.add(toolTip.element);
+    });
   }
 }

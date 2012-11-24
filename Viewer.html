@@ -26,7 +26,7 @@
             <div id='texture_tab' class='tab'>Textures</div>
             <div id='vertex_shader_tab' class='tab'>Vertex</div>
             <div id='fragment_shader_tab' class='tab'>Fragment</div>
-            <div id='uniform_tab' class='tab'>Uniforms</div>
+            <div id='variables_tab' class='tab'>Variables</div>
             <div id='renderer_tab' class='tab'>Renderer</div>
           </div>
           <!-- UI Content -->
@@ -67,36 +67,15 @@
               <textarea id='fragment_shader_source'></textarea>
             </div>
 
-            <!-- Uniform Area -->
-            <div id='uniform_area' class='hidden'>
+            <!-- Variable Area -->
+            <div id='variables_area' class='hidden'>
               <div class='ui_row first'>
+                <h2>Builtin Vertex Attributes</h2>
+                <table id='builtin_attributes' class='variable_table'></table>
+              </div>
+              <div class='ui_row second'>
                 <h2>Builtin Uniforms</h2>
-                <table class='uniform_table'>
-                  <tr>
-                    <td class='uniform_name'>float time</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td class='uniform_name'>mat4 uModelMatrix</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td class='uniform_name'>mat4 uModelViewMatrix</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td class='uniform_name'>mat4 uModelViewProjectionMatrix</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td class='uniform_name'>mat4 uProjectionMatrix</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td class='uniform_name'>mat3 uNormalMatrix</td>
-                    <td></td>
-                  </tr>
-                </table>
+                <table id='builtin_uniforms' class='variable_table'></table>
               </div>
             </div>
 

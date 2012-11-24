@@ -207,22 +207,27 @@ textarea {
   }
 }
 
-/* Uniform UI */
+/* Shader variable UI */
 
-#uniform_area
+#variable_area
 {
   tr:nth-child(odd)  { background: $tab_background_color; }
   tr:nth-child(even) { background: $background_color; }
 }
 
-.uniform_table
+.variable_table
 {
   width: 100%;
 }
 
-.uniform_name
+.variable_name
 {
   font-weight: bold;
+}
+
+.variable_tool_tip
+{
+  text-align: right;
 }
 
 /* Renderer UI */
