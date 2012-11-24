@@ -1,5 +1,8 @@
 part of viewer;
 
+/// Callback type for when a file dialog is submitted.
+typedef void FileDialogSubmitEvent(String name);
+
 /**
  * A basic modal dialog to overlay over the application.
  */
@@ -97,6 +100,8 @@ class FileSystemDialog extends ModalDialog
   ApplicationFileSystem _fileSystem;
   /// The rows containing the file information.
   List<TableRowElement> _files;
+  /// Callback for when the dialog is submitted.
+  FileDialogSubmitEvent submitCallback;
 
   /**
    * Creates an instance of the [LoadDialog] class.
@@ -104,23 +109,14 @@ class FileSystemDialog extends ModalDialog
   FileSystemDialog(String id, ApplicationFileSystem fileSystem)
     : super(id)
   {
+    _fileSystem = fileSystem;
     _files = new List<TableRowElement>();
 
-    DivElement submit = query(_ElementNames.submitButtonClassName);
+    DivElement submit = _element.query(_ElementNames.submitButtonClassName);
     submit.on.click.add(_onSubmit);
 
-    DivElement cancel = query(_ElementNames.cancelButtonClassName);
+    DivElement cancel = _element.query(_ElementNames.cancelButtonClassName);
     cancel.on.click.add(_onHide);
-  }
-
-  /**
-   * Shows the modal dialog.
-   */
-  void show()
-  {
-    super.show();
-
-    _createFileList();
   }
 
   /**
@@ -133,7 +129,7 @@ class FileSystemDialog extends ModalDialog
     TableElement table = _element.query('table');
     table.nodes.clear();
 
-    int length = 3;
+    int length = _fileSystem.workspaces.length;
 
     for (int i = 0; i < length; ++i)
     {
@@ -146,8 +142,10 @@ class FileSystemDialog extends ModalDialog
         _selectFile(i);
       });
 
+      Workspace workspace = _fileSystem.workspaces[i];
+
       cell = new TableCellElement();
-      cell.innerHTML = 'Testing';
+      cell.innerHTML = workspace.name;
       row.nodes.add(cell);
 
       cell = new TableCellElement();
@@ -156,6 +154,9 @@ class FileSystemDialog extends ModalDialog
     }
   }
 
+  /**
+   * Selects a workspace.
+   */
   void _selectFile(int index)
   {
     int length = _files.length;
@@ -176,7 +177,7 @@ class FileSystemDialog extends ModalDialog
 
   }
 
-  void _onSubmit(_) { }
+  void _onSubmit(_) {}
 }
 
 /**
@@ -189,12 +190,30 @@ class LoadDialog extends FileSystemDialog
    */
   LoadDialog(String id, ApplicationFileSystem fileSystem)
     : super(id, fileSystem);
+
+  /**
+   * Shows the modal dialog.
+   */
+  void show()
+  {
+    super.show();
+
+    _createFileList();
+  }
+
+  /**
+   * Callback for loading a file.
+   */
+  void _onSubmit(_)
+  {
+    print('Load file');
+  }
 }
 
 /**
  * A [ModalDialog] for saving files.
  */
-class SaveDialog extends ModalDialog
+class SaveDialog extends FileSystemDialog
 {
   /// Input element containing the name of the workspace.
   InputElement _nameElement;
@@ -202,24 +221,36 @@ class SaveDialog extends ModalDialog
   /**
    * Creates an instance of the [SaveDialog] class.
    */
-  SaveDialog(String id)
-    : super(id)
+  SaveDialog(String id, ApplicationFileSystem fileSystem)
+    : super(id, fileSystem)
   {
-    DivElement save = query(_ElementNames.submitButtonClassName);
-    save.on.click.add(_onSave);
-
-    DivElement cancel = query(_ElementNames.cancelButtonClassName);
-    cancel.on.click.add(_onHide);
-
     _nameElement = _element.query('input');
-    print(_nameElement.value);
   }
 
   /**
    * Callback for saving the file.
    */
-  void _onSave(_)
+  void _onSubmit(_)
   {
-    print(_nameElement.value);
+    String value = _nameElement.value;
+
+    if (value.isEmpty)
+    {
+      return;
+    }
+
+    // Make sure the name isn't already in use
+    for (Workspace workspace in _fileSystem.workspaces)
+    {
+      if (workspace.name == _nameElement.value)
+      {
+        return;
+      }
+    }
+
+    if (submitCallback != null)
+    {
+      submitCallback(_nameElement.value);
+    }
   }
 }

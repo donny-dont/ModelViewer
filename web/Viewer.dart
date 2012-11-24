@@ -168,6 +168,11 @@ class Viewer
       saveFile();
     });
 
+    DivElement saveAsFileButton = query(_ElementNames.saveAsFileButtonName);
+    saveAsFileButton.on.click.add((_) {
+      _saveDialog.show();
+    });
+
     DivElement aboutButton = query(_ElementNames.aboutButtonName);
     aboutButton.on.click.add((_) {
       _aboutDialog.show();
@@ -202,10 +207,6 @@ class Viewer
     _fileSystemDialog = new ModalDialog(_ElementNames.filesystemDialogName);
     _aboutDialog = new SimpleModalDialog(_ElementNames.aboutDialogName);
 
-    _saveDialog = new SaveDialog(_ElementNames.saveDialogName);
-
-    _loadDialog = new LoadDialog(_ElementNames.loadDialogName, _fileSystem);
-
     // Create the callback for displaying the file system dialog
     Timer timer = new Timer(_fileSystemDialogDelay, (_) {
       _onFileSystemTimeout();
@@ -221,10 +222,9 @@ class Viewer
    */
   void newFile()
   {
-    _fileSystem.createWorkspace().then((workspace) {
-      print('workspace created');
-      _currentWorkspace = workspace;
-    });
+    // Clear the temporary file system
+    _currentWorkspace = _fileSystem.tempWorkspace;
+    _currentWorkspace.clear();
 
     loadFile(_newFileState);
 
@@ -244,11 +244,26 @@ class Viewer
    */
   void saveFile()
   {
-    Map values = serialize();
-    String json = JSON.stringify(values);
+    // Check to see if the current workspace is the temporary one.
+    if (_currentWorkspace == _fileSystem.tempWorkspace)
+    {
+      _saveDialog.show();
+    }
+    else
+    {
+      Map values = serialize();
+      String json = JSON.stringify(values);
 
-    print('Application State\n');
-    print(json);
+      print('Application State\n');
+      print(json);
+    }
+  }
+
+  void saveFileAs(String name)
+  {
+    _fileSystem.copyWorkspace(_currentWorkspace, name).then((workspace) {
+      _currentWorkspace = workspace;
+    });
   }
 
   /**
@@ -310,6 +325,14 @@ class Viewer
     {
       _fileSystemDialog.hide();
     }
+
+    _saveDialog = new SaveDialog(_ElementNames.saveDialogName, _fileSystem);
+    _saveDialog.submitCallback = _onSaveAs;
+
+    _loadDialog = new LoadDialog(_ElementNames.loadDialogName, _fileSystem);
+    _loadDialog.submitCallback = _onLoad;
+
+    newFile();
   }
 
   /**
@@ -322,6 +345,24 @@ class Viewer
       _loadingScreen.hide();
       _fileSystemDialog.show();
     }
+  }
+
+  /**
+   * Callback for when a workspace is saved.
+   */
+  void _onSaveAs(String name)
+  {
+    _saveDialog.hide();
+
+    saveFileAs(name);
+  }
+
+  /**
+   * Callback for when a workspace is loaded.
+   */
+  void _onLoad(String name)
+  {
+
   }
 
   /**

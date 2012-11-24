@@ -18,6 +18,8 @@ class ApplicationFileSystem
    * Currently 20 MBs
    */
   static const int _bytesToRequest = 20 * 1024 * 1024;
+  /// The name of the temporary workspace.
+  static const String _tempWorkspaceName = 'temp';
 
   //---------------------------------------------------------------------
   // Member variables
@@ -27,6 +29,8 @@ class ApplicationFileSystem
   DOMFileSystem _fileSystem;
   /// The number of bytes alotted.
   int _bytesGranted;
+  /// The temporary [Workspace].
+  Workspace _tempWorkspace;
   /// The available [Workspace]s.
   List<Workspace> _workspaces;
   /// Callback for when the filesystem is ready.
@@ -71,7 +75,25 @@ class ApplicationFileSystem
 
     _searchForWorkspaces(directoryReader);
 
-    // Notify that the filesystem is ready
+    if (_tempWorkspace == null)
+    {
+      _createWorkspace(_tempWorkspaceName).then((workspace) {
+        _tempWorkspace = workspace;
+
+        _onFileSystemReady();
+      });
+    }
+    else
+    {
+      _onFileSystemReady();
+    }
+  }
+
+  /**
+   * Callback for when the file system is ready.
+   */
+  void _onFileSystemReady()
+  {
     if (_fileSystemReadyCallback != null)
     {
       _fileSystemReadyCallback();
@@ -98,23 +120,52 @@ class ApplicationFileSystem
   }
 
   //---------------------------------------------------------------------
+  // Properties
+  //---------------------------------------------------------------------
+
+  /// The temporary workspace
+  Workspace get tempWorkspace => _tempWorkspace;
+  /// The created workspaces
+  List<Workspace> get workspaces => _workspaces;
+
+  //---------------------------------------------------------------------
   // Workspace
   //---------------------------------------------------------------------
 
   /**
    * Creates a new [Workspace].
    */
-  Future<Workspace> createWorkspace()
+  Future<Workspace> _createWorkspace(String directoryName, [String name = ''])
   {
     Completer workspaceCreation = new Completer();
-    Date currentTime = new Date.now();
-    String newDirectoryName = '${currentTime.millisecondsSinceEpoch}';
 
-    _fileSystem.root.getDirectory(newDirectoryName, options: {'create': true}, successCallback: (directoryEntry) {
-      Workspace workspace = new Workspace(directoryEntry);
+    _fileSystem.root.getDirectory(directoryName, options: {'create': true}, successCallback: (directoryEntry) {
+      Workspace workspace = new Workspace(directoryEntry, name);
 
       workspaceCreation.complete(workspace);
     }, errorCallback: _onFileSystemError);
+
+    return workspaceCreation.future;
+  }
+
+  /**
+   * Creates a copy of a [Workspace] already present on the file system.
+   */
+  Future<Workspace> copyWorkspace(Workspace original, String name)
+  {
+    Completer workspaceCreation = new Completer();
+    String newDirectoryName = _getNewDirectoryName();
+
+    _createWorkspace(newDirectoryName, name).then((copy) {
+      original._directory.copyTo(copy._directory);
+      _workspaces.add(copy);
+
+      // Create metadata
+      String metadata = '{ "name": "$name" }';
+      copy.saveMetadata(metadata).then((_) {
+        workspaceCreation.complete(copy);
+      });
+    });
 
     return workspaceCreation.future;
   }
@@ -124,7 +175,20 @@ class ApplicationFileSystem
    */
   Future<Workspace> loadWorkspace(String name)
   {
+    Completer workspaceLoaded = new Completer();
+    int length = _workspaces.length;
 
+    for (int i = 0; i < length; ++i)
+    {
+      Workspace workspace = _workspaces[i];
+
+      if (name == workspace.name)
+      {
+        workspaceLoaded.complete(workspace);
+      }
+    }
+
+    return workspaceLoaded.future;
   }
 
   /**
@@ -140,7 +204,17 @@ class ApplicationFileSystem
           if (entry.isDirectory)
           {
             print(entry.name);
-            _workspaces.add(new Workspace(entry));
+
+            Workspace workspace = new Workspace(entry);
+
+            if (entry.name == _tempWorkspaceName)
+            {
+              _tempWorkspace = workspace;
+            }
+            else
+            {
+              _workspaces.add(workspace);
+            }
           }
         }
 
@@ -150,5 +224,16 @@ class ApplicationFileSystem
         _searchForWorkspaces(directoryReader);
       }
     });
+  }
+
+  /**
+   * Gets a directory name based on the current time.
+   *
+   * This is just used so there aren't any naming collisions.
+   */
+  static String _getNewDirectoryName()
+  {
+    Date currentTime = new Date.now();
+    return '${currentTime.millisecondsSinceEpoch}';
   }
 }
