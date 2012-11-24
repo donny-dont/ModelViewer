@@ -129,6 +129,7 @@ class FileSystemDialog extends ModalDialog
     TableElement table = _element.query('table');
     table.nodes.clear();
 
+    _files.clear();
     int length = _fileSystem.workspaces.length;
 
     for (int i = 0; i < length; ++i)
@@ -174,7 +175,6 @@ class FileSystemDialog extends ModalDialog
         row.classes.remove(_fileSelectedClass);
       }
     }
-
   }
 
   void _onSubmit(_) {}
