@@ -123,11 +123,11 @@ class Viewer
     _textureSelection.samplerStateCallback = _onSamplerStateChanged;
 
     // Attach to the vertex shader editor
-    _vertexShaderEditor = new SourceEditor('#vertex_shader_source');
+    _vertexShaderEditor = new SourceEditor('#vertex_shader_source', '#vertex_shader_code_lines');
     _vertexShaderEditor.sourceCallback = _onVertexShaderChanged;
 
     // Attach to the fragment shader editor
-    _fragmentShaderEditor = new SourceEditor('#fragment_shader_source');
+    _fragmentShaderEditor = new SourceEditor('#fragment_shader_source', '#fragment_shader_code_lines');
     _fragmentShaderEditor.sourceCallback = _onFragmentShaderChanged;
 
     // Attach to the uniform UI
@@ -528,6 +528,8 @@ class Viewer
   {
     Game game = Game.instance;
     _compileLog.clear();
+    _vertexShaderEditor.clearErrors();
+    _fragmentShaderEditor.clearErrors();
 
     if (game.isProgramValid)
     {
@@ -539,6 +541,13 @@ class Viewer
       // Update the compile log
       _compileLog.addToLog('Vertex', game.vertexShaderLog);
       _compileLog.addToLog('Fragment', game.fragmentShaderLog);
+
+      // Show errors/warnings in the editor
+      _vertexShaderEditor.setErrorsAt(_compileLog.vertexShaderErrorLines);
+      _vertexShaderEditor.setWarningsAt(_compileLog.vertexShaderWarningLines);
+
+      _fragmentShaderEditor.setErrorsAt(_compileLog.fragmentShaderErrorLines);
+      _fragmentShaderEditor.setWarningsAt(_compileLog.fragmentShaderWarningLines);
     }
   }
 

@@ -27,7 +27,6 @@
 .selected
 {
   background: $tab_background_color;
-
 }
 
 #ui_contents
@@ -44,28 +43,6 @@
     color: $tab_border_color;
     width: $tab_border_width;
   }
-
-
-	textarea
-	{
-	  font-family:"Lucida Console", Monaco, monospace;
-	  white-space:nowrap;
-	  spellcheck:false;
-	  font-size:12px;
-	  resize: both;
-	  width: 100%;
-	  box-sizing: border-box;
-	}
-}
-
-textarea {
-  font-family:"Lucida Console", Monaco, monospace;
-  width:534px;
-  height:594px;
-  overflow:scroll;
-  white-space:nowrap;
-  spellcheck:false;
-  font-size:12px;
 }
 
 .drag_over
@@ -205,6 +182,79 @@ textarea {
   {
     width: 180px;
   }
+}
+
+/* Source editor UI */
+
+.shader_area_wrapper
+{
+  width: 100%;
+
+}
+
+textarea
+{
+  font-family:"Lucida Console", Monaco, monospace;
+  font-size: 12px;
+  height: 696px !important;
+  line-height: 15px;
+  white-space: nowrap;
+  spellcheck: false !important;
+  resize: both;
+  width: 100%;
+  height: 200px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 !important;
+  outline: none;
+  border: none;
+}
+
+.source_code_wrapper
+{
+  float: left;
+  width: 100%;
+}
+
+.source_code_right
+{
+  margin-left: 55px;
+}
+
+.lines
+{
+  font-family:"Lucida Console", Monaco, monospace;
+  font-size: 12px;
+  line-height: 15px;
+  height: 696px;
+  float: left;
+  overflow: hidden;
+  border-right: 1px solid silver;
+  margin-right: 10px;
+  width: 50px;
+  margin-left: -100%;
+}
+
+.code_lines
+{
+  text-align: right;
+}
+
+.line_num {}
+.error_at
+{
+  background-image: url(web/resources/images/error.png);
+  background-color: #ffb0a8;
+  background-repeat: no-repeat !important;
+  background-position-x: 2px;
+}
+
+.warning_at
+{
+  background-image: url(web/resources/images/warning.png);
+  background-color: #ffed87;
+  background-repeat: no-repeat !important;
+  background-position-x: 2px;
 }
 
 /* Shader variable UI */
