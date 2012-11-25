@@ -60,6 +60,10 @@ class SourceEditor
     _sourceCode = query(textId);
     assert(_sourceCode != null);
 
+    // Remove spellcheck!
+    _sourceCode.spellcheck = false;
+
+    // Add events
     _sourceCode.on.keyUp.add((_) {
       print('Scroll height ${_sourceCode.scrollHeight}');
       Date date = new Date.now();
@@ -90,10 +94,10 @@ class SourceEditor
   //---------------------------------------------------------------------
 
   /// The source code contained in the editor.
-  String get source => _sourceCode.value;
+  String get source => _toAscii(_sourceCode.value);
   set source(String value)
   {
-    _sourceCode.value = value;
+    _sourceCode.value = _toUnicode(value);
     _calculateLineNumbers();
   }
 
@@ -224,5 +228,86 @@ class SourceEditor
   void _onSourceScrolled(_)
   {
     _codeLines.style.marginTop = '-${_sourceCode.scrollTop}px';
+  }
+
+  //---------------------------------------------------------------------
+  // Static methods
+  //---------------------------------------------------------------------
+
+  /**
+   * Removes unicode characters.
+   *
+   * The textarea ends up containing unicode characters within it, so
+   * this will strip them.
+   */
+  static String _toAscii(String value)
+  {
+    StringBuffer buffer = new StringBuffer();
+    int length = value.length;
+
+    for (int i = 0; i < length; ++i)
+    {
+      int charCode = value.charCodeAt(i);
+
+      if (charCode == 160)
+      {
+        buffer.add(' ');
+      }
+      else if ((charCode >= 0) && (charCode < 128))
+      {
+        buffer.addCharCode(charCode);
+      }
+      else
+      {
+        print('Warning unknown character code at $i: $charCode');
+      }
+    }
+
+    return buffer.toString();
+  }
+
+  /**
+   * Adds unicode space characters.
+   *
+   * The textarea wants unicode characters for leading spaces. So add
+   * them in.
+   */
+  static String _toUnicode(String value)
+  {
+    StringBuffer buffer = new StringBuffer();
+
+    List<String> lines = value.split('\n');
+
+    for (String line in lines)
+    {
+      int length = line.length;
+      int i = 0;
+
+      // Look for leading spaces
+      for (; i < length; ++i)
+      {
+        int charCode = line.charCodeAt(i);
+
+        if (charCode == 32)
+        {
+          buffer.addCharCode(160);
+        }
+        else
+        {
+          break;
+        }
+      }
+
+      // Add the rest of the string
+      for (; i < length; ++i)
+      {
+        buffer.addCharCode(line.charCodeAt(i));
+      }
+
+      // Add end line
+      buffer.addCharCode(10);
+    }
+
+    return buffer.toString();
   }
 }
