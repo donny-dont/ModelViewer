@@ -88,7 +88,7 @@ class CompileLog
 
       List<String> groups = match.groups([0, 1, 2, 3]);
 
-      int lineNumber = Math.parseInt(groups[2]) - 1;
+      int lineNumber = Math.parseInt(groups[2]);
       errors.add(lineNumber);
 
       _addToTable(_errorLog, source, groups);
@@ -102,7 +102,7 @@ class CompileLog
 
       List<String> groups = match.groups([0, 1, 2, 3]);
 
-      int lineNumber = Math.parseInt(groups[2]) - 1;
+      int lineNumber = Math.parseInt(groups[2]);
       warnings.add(lineNumber);
 
       _addToTable(_warningLog, source, groups);
@@ -140,8 +140,7 @@ class CompileLog
     row.nodes.add(shader);
 
     TableCellElement location = new TableCellElement();
-    int lineNumber = Math.parseInt(groups[2]) - 1;
-    location.innerHTML = '${groups[1]},${lineNumber}';
+    location.innerHTML = '${groups[1]},${groups[2]}';
     row.nodes.add(location);
 
     TableCellElement message = new TableCellElement();

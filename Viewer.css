@@ -253,7 +253,8 @@ textarea {
   height: 696px;
   float: left;
   overflow: hidden;
-  border-right: 1px solid silver;
+  background: #f8f8f8;
+  border-right: 1px solid #abadb3;
   margin-right: 10px;
   width: 50px;
   margin-left: -100%; }

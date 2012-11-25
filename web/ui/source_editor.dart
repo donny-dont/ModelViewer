@@ -30,7 +30,12 @@ class SourceEditor
 
   /// The [TextAreaElement] holding the source code.
   TextAreaElement _sourceCode;
-  /// The [DivElement] containing the code lines.
+  /**
+   * The [DivElement] containing the code lines.
+   *
+   * The div has Text as its first node. The lines of code
+   * will be starting at index 1.
+   */
   DivElement _codeLines;
   /// The number of lines
   int _lineCount;
@@ -122,8 +127,7 @@ class SourceEditor
 
     for (int i = 0; i < errors; ++i)
     {
-      // Offset by 1 as the first node is Text.
-      lines[lineNumbers[i] + 1].classes.add(className);
+      lines[lineNumbers[i]].classes.add(className);
     }
   }
 
@@ -170,7 +174,6 @@ class SourceEditor
       List<Element> toRemove = new List<Element>();
       int length = _codeLines.nodes.length;
 
-      // Increment by 1 as the first element is Text
       for (int i = lines + 1; i < length; ++i)
       {
         toRemove.add(_codeLines.nodes[i]);
@@ -184,7 +187,7 @@ class SourceEditor
     else
     {
       // Add lines
-      for (int i = _lineCount; i < lines; ++i)
+      for (int i = _lineCount + 1; i <= lines; ++i)
       {
         DivElement lineNum = new DivElement();
         lineNum.innerHTML = i.toString();

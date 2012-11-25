@@ -229,7 +229,8 @@ textarea
   height: 696px;
   float: left;
   overflow: hidden;
-  border-right: 1px solid silver;
+  background: $background_color;
+  border-right: 1px solid $tab_border_color;
   margin-right: 10px;
   width: 50px;
   margin-left: -100%;
