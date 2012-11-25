@@ -2,12 +2,8 @@
 null
 packages
 packages/
-*.js
-*.js_
-*.js.map
 *.lock
 *.tmp
-*.deps
 .project
 .source
 .sass-cache
