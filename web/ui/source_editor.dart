@@ -59,7 +59,7 @@ class SourceEditor
       print('Scroll height ${_sourceCode.scrollHeight}');
       Date date = new Date.now();
       _compileSourceAt = date.millisecondsSinceEpoch + _compileDelay;
-      _createLineNumbers();
+      _calculateLineNumbers();
 
       Timer timer = new Timer(_compileDelay, (_) {
         _onSourceChanged();
@@ -73,7 +73,11 @@ class SourceEditor
     _codeLines = query(lineNumbersId);
     assert(_codeLines != null);
 
+    // Just set the line count manually
+    // Appears that the text area doesn't have a height if its hidden,
+    // so this is a workaround to make sure line numbers are present.
     _lineCount = 0;
+    _createLineNumbers(46);
   }
 
   //---------------------------------------------------------------------
@@ -85,7 +89,7 @@ class SourceEditor
   set source(String value)
   {
     _sourceCode.value = value;
-    _createLineNumbers();
+    _calculateLineNumbers();
   }
 
   //---------------------------------------------------------------------
@@ -142,12 +146,23 @@ class SourceEditor
   }
 
   /**
-   * Create the line numbers.
+   * Calculates the line numbers required.
    */
-  void _createLineNumbers()
+  void _calculateLineNumbers()
   {
     double linesNum = _sourceCode.scrollHeight / 15.0;
     int lines = linesNum.toInt();
+
+    _createLineNumbers(lines);
+  }
+
+  /**
+   * Create the line numbers.
+   */
+  void _createLineNumbers(int lines)
+  {
+    if (lines == 0)
+      return;
 
     if (_lineCount > lines)
     {
