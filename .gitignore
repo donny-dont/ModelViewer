@@ -12,3 +12,4 @@ packages/
 .source
 .sass-cache
 .sass-cache/
+bin/output/*
