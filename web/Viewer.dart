@@ -12,10 +12,6 @@ import 'package:vector_math/vector_math_browser.dart';
 // Source files
 //---------------------------------------------------------------------
 
-part 'client/json_object.dart';
-part 'client/server_connection.dart';
-part 'client/messages.dart';
-
 part 'application/frame_counter.dart';
 part 'application/game.dart';
 part 'application/shader_defaults.dart';
