@@ -183,6 +183,14 @@ class Workspace
   }
 
   /**
+   * Saves a model to the file system.
+   */
+  Future<String> saveModelFromString(String model)
+  {
+    return _writeText(_modelFileName, model);
+  }
+
+  /**
    * Saves a [Texture] to the file system.
    */
   Future<String> saveTexture(File file, int textureUnit)

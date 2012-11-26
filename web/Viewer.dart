@@ -471,12 +471,41 @@ class Viewer
    */
   void _onModelLoaded(File file)
   {
-    _currentWorkspace.saveModel(file).then((value) {
-      print('Model changed $value');
+    String extension = _getFileExtension(file);
 
-      // Display the new model
-      Game.instance.mesh = value;
-    });
+    if (extension == '.mesh')
+    {
+      _currentWorkspace.saveModel(file).then((value) {
+        print('Model changed $value');
+
+        // Display the new model
+        Game.instance.mesh = value;
+      });
+    }
+    else
+    {
+      print('Connecting to server');
+      WebSocket connection = new WebSocket('ws://localhost:8000/ws');
+
+      connection.on.open.add((_) {
+        print('Connected to server');
+
+        connection.send(file.name);
+        connection.send(file);
+      });
+
+      connection.on.message.add((messageEvent) {
+        _currentWorkspace.saveModelFromString(messageEvent.data).then((value) {
+          print('Model changed $value');
+
+          // Display the new model
+          Game.instance.mesh = value;
+
+          // Close the connection
+          connection.close();
+        });
+      });
+    }
   }
 
   /**
@@ -584,6 +613,16 @@ class Viewer
     Game.instance.setBlendStateProperties(properties);
   }
 
+  //---------------------------------------------------------------------
+  // Static methods
+  //---------------------------------------------------------------------
+
+  static String _getFileExtension(File file)
+  {
+    String fileName = file.name;
+
+    return fileName.substring(fileName.lastIndexOf('.'));
+  }
 }
 
 /**
